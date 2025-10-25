@@ -13,7 +13,7 @@ export type TintaQuery = {
   acabamento: z.infer<typeof ACABAMENTOS_SCHEMA>;
   features: string[];
   linhas: z.infer<typeof LINHAS_SCHEMA>;
-  tiposDeSuperfeicie: z.infer<typeof TIPOS_DE_SUPERFICIE_ZOD>;
+  tiposDeSuperfeicie: z.infer<typeof TIPOS_DE_SUPERFICIE_ZOD>[];
 };
 
 export interface ItintaRepository {
