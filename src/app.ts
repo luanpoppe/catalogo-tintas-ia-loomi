@@ -2,6 +2,7 @@ import fastify from "fastify";
 import { fastifySwagger } from "@fastify/swagger";
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { fastifyCors } from "@fastify/cors";
+import { fastifyJwt } from "@fastify/jwt";
 import {
   jsonSchemaTransform,
   validatorCompiler,
@@ -11,6 +12,7 @@ import {
 import { Langchain } from "./lib/langchain/langchain";
 import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
 import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
+import { env } from "./env";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -36,6 +38,17 @@ app.register(fastifySwagger, {
 
 app.register(fastifySwaggerUi, {
   routePrefix: "/swagger",
+});
+
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: "refreshToken",
+    signed: false,
+  },
+  sign: {
+    expiresIn: "10m",
+  },
 });
 
 app.register(TintasRouter.route, { prefix: "/tinta" });
