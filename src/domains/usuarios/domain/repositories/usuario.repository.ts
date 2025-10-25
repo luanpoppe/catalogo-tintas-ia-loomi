@@ -6,9 +6,9 @@ export interface IUsuarioRepository {
 
   findByEmail(email: string): Promise<UsuarioEntity | null>;
 
-  create(tinta: RequestUsuarioDTO): Promise<UsuarioEntity>;
+  create(usuario: RequestUsuarioDTO): Promise<UsuarioEntity>;
 
-  update(id: number, tinta: RequestUsuarioDTO): Promise<UsuarioEntity>;
+  update(id: number, usuario: RequestUsuarioDTO): Promise<UsuarioEntity>;
 
   delete(id: number): Promise<void>;
 }
