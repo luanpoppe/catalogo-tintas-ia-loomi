@@ -13,3 +13,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum AMBIENTES {
+  INTERNO
+  EXTERNO
+  INTERNO_EXTERNO
+}
+
+enum ACABAMENTOS {
+  ACETINADO
+  FOSCO
+  BRILHANTE
+}
+
+enum LINHAS {
+  PREMIUM
+  STANDARD
+}
+
+enum TIPOS_DE_SUPERFICIE {
+  ALVENARIA
+  MADEIRA
+  FERRO
+}
+
+model Tintas {
+  id                 Int                   @id @default(autoincrement())
+  nome               String
+  cor                String
+  ambiente           AMBIENTES
+  acabamento         ACABAMENTOS
+  features           String[]
+  linhas             LINHAS
+  tiposDeSuperfeicie TIPOS_DE_SUPERFICIE[]
+
+  @@map("tintas")
+}
