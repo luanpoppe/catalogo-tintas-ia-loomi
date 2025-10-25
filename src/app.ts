@@ -8,6 +8,7 @@ import {
   serializerCompiler,
   ZodTypeProvider,
 } from "fastify-type-provider-zod";
+import { Langchain } from "./lib/langchain/langchain";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -35,8 +36,23 @@ app.register(fastifySwaggerUi, {
   routePrefix: "/swagger",
 });
 
-app.get("/", (req, reply) => {
-  return reply.status(200).send({ msg: "Hello" });
+app.post("/", async (req, reply) => {
+  const model = Langchain.models.gemini();
+
+  try {
+    const agent = await Langchain.createAgent({ model });
+    const res = await agent.invoke(
+      {
+        messages: [{ role: "user", content: (req.body as any).content }],
+      },
+      { configurable: { thread_id: "1" } }
+    );
+
+    return reply.status(200).send({ msg: "Hello", res });
+  } catch (error: any) {
+    console.error(error);
+    throw new Error();
+  }
 });
 
 export { app };
