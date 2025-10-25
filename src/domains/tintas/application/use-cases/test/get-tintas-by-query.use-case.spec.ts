@@ -4,38 +4,23 @@ import {
   ITintaRepository,
   TintaQuery,
 } from "@/domains/tintas/domain/repositories/tinta.repository";
+import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetTintasByQueryUseCase", () => {
   it("should return tintas by query", async () => {
-    const mockTintas = [
-      {
-        id: 1,
-        nome: "Tinta Teste 1",
-        cor: "Vermelho",
-        ambiente: "INTERNO",
-        acabamento: "BRILHANTE",
-        features: ["Secagem Rápida"],
-        linhas: "PREMIUM",
-        tiposDeSuperfeicie: ["ALVENARIA"],
-      },
-    ];
+    const tintaEntity = MockTintaBuilder.buildEntity();
+    const mockTintas = [tintaEntity];
 
-    const mockTintaRepository: ITintaRepository = {
-      create: vi.fn(),
-      findAll: vi.fn(),
-      findById: vi.fn(),
-      update: vi.fn(),
-      delete: vi.fn(),
-      getByQuery: vi.fn().mockResolvedValue(mockTintas),
-    };
+    const mockTintaRepository = MockTintaBuilder.buildMockRepository();
+    mockTintaRepository.getByQuery.mockResolvedValue(mockTintas);
 
     const getTintasByQueryUseCase = new GetTintasByQueryUseCase(
       mockTintaRepository
     );
 
     const query: TintaQuery = {
-      cor: "Vermelho",
-      ambiente: "INTERNO",
+      cor: tintaEntity.cor,
+      ambiente: tintaEntity.ambiente,
     };
 
     const result = await getTintasByQueryUseCase.execute(query);

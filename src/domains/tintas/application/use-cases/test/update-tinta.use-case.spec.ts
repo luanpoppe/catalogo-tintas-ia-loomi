@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { UpdateTintaUseCase } from "../update-tinta.use-case";
 import { ITintaRepository } from "@/domains/tintas/domain/repositories/tinta.repository";
 import { RequestTintaDTO } from "@/domains/tintas/infrastructure/http/dto/tinta.dto";
+import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("UpdateTintaUseCase", () => {
   it("should update a tinta by id", async () => {
@@ -21,14 +22,8 @@ describe("UpdateTintaUseCase", () => {
       ...updateData,
     };
 
-    const mockTintaRepository: ITintaRepository = {
-      create: vi.fn(),
-      findAll: vi.fn(),
-      findById: vi.fn(),
-      update: vi.fn().mockResolvedValue(mockUpdatedTinta),
-      delete: vi.fn(),
-      getByQuery: vi.fn(),
-    };
+    const mockTintaRepository = MockTintaBuilder.buildMockRepository();
+    mockTintaRepository.update.mockResolvedValue(mockUpdatedTinta);
 
     const updateTintaUseCase = new UpdateTintaUseCase(mockTintaRepository);
 

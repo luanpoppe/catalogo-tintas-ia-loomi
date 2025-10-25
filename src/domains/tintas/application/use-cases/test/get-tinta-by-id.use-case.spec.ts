@@ -1,32 +1,18 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { GetTintaByIdUseCase } from "../get-tinta-by-id.use-case";
-import { ITintaRepository } from "@/domains/tintas/domain/repositories/tinta.repository";
+import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetTintaByIdUseCase", () => {
   it("should return a tinta by id", async () => {
-    const mockTinta = {
-      id: 1,
-      nome: "Tinta Teste 1",
-      cor: "Vermelho",
-      ambiente: "INTERNO",
-      acabamento: "BRILHANTE",
-      features: ["Secagem Rápida"],
-      linhas: "PREMIUM",
-      tiposDeSuperfeicie: ["ALVENARIA"],
-    };
+    const mockTinta = MockTintaBuilder.buildEntity();
 
-    const mockTintaRepository: ITintaRepository = {
-      create: vi.fn(),
-      findAll: vi.fn(),
-      findById: vi.fn().mockResolvedValue(mockTinta),
-      update: vi.fn(),
-      delete: vi.fn(),
-      getByQuery: vi.fn(),
-    };
+    const mockTintaRepository = MockTintaBuilder.buildMockRepository();
+
+    mockTintaRepository.findById.mockResolvedValue(mockTinta);
 
     const getTintaByIdUseCase = new GetTintaByIdUseCase(mockTintaRepository);
 
-    const tintaId = 1;
+    const tintaId = mockTinta.id!;
     const result = await getTintaByIdUseCase.execute(tintaId);
 
     expect(mockTintaRepository.findById).toHaveBeenCalledWith(tintaId);

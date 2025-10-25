@@ -1,21 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { DeleteTintaUseCase } from "../delete-tinta.use-case";
-import { ITintaRepository } from "@/domains/tintas/domain/repositories/tinta.repository";
+import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("DeleteTintaUseCase", () => {
-  it("should delete a tinta by id", async () => {
-    const mockTintaRepository: ITintaRepository = {
-      create: vi.fn(),
-      findAll: vi.fn(),
-      findById: vi.fn(),
-      update: vi.fn(),
-      delete: vi.fn().mockResolvedValue(undefined),
-      getByQuery: vi.fn(),
-    };
+  it("deve deletar um tinta pelo id", async () => {
+    const mockTintaRepository = MockTintaBuilder.buildMockRepository();
+    mockTintaRepository.delete.mockResolvedValue(undefined);
 
     const deleteTintaUseCase = new DeleteTintaUseCase(mockTintaRepository);
 
-    const tintaId = 1;
+    const tintaId = MockTintaBuilder.buildEntity().id!;
     await deleteTintaUseCase.execute(tintaId);
 
     expect(mockTintaRepository.delete).toHaveBeenCalledWith(tintaId);
