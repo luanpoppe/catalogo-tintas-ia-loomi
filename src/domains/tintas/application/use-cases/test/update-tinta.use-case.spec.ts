@@ -1,6 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { UpdateTintaUseCase } from "../update-tinta.use-case";
-import { ITintaRepository } from "@/domains/tintas/domain/repositories/tinta.repository";
 import { RequestTintaDTO } from "@/domains/tintas/infrastructure/http/dto/tinta.dto";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 

@@ -1,9 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { GetTintasByQueryUseCase } from "../get-tintas-by-query.use-case";
-import {
-  ITintaRepository,
-  TintaQuery,
-} from "@/domains/tintas/domain/repositories/tinta.repository";
+import { TintaQuery } from "@/domains/tintas/domain/repositories/tinta.repository";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetTintasByQueryUseCase", () => {
