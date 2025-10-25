@@ -8,6 +8,8 @@ export type RequestTintaDTO = z.infer<typeof RequestTintaDTOSchema>;
 
 export type RequestUpdateTinta = TintasUpdateInput;
 
-export const ResponseTintaDTOSchema = TintaSchema;
+export const ResponseTintaDTOSchema = TintaSchema.extend({
+  id: z.number().int().positive(),
+});
 
 export type ResponseTintaDTO = z.infer<typeof ResponseTintaDTOSchema>;
