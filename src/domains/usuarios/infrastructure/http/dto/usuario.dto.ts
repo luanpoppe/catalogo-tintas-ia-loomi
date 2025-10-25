@@ -4,7 +4,7 @@ import { UsuarioSchema } from "@/domains/usuarios/domain/entities/usuario.entity
 const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+$/;
 
 export const RequestUsuarioDTOSchema = UsuarioSchema.extend({
-  password: z
+  senha: z
     .string()
     .min(8, "A senha deve ter no mínimo 8 caracteres.")
     .max(25, "A senha deve ter no máximo 25 caracteres.")
