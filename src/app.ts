@@ -9,6 +9,7 @@ import {
   ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { Langchain } from "./lib/langchain/langchain";
+import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -35,6 +36,8 @@ app.register(fastifySwagger, {
 app.register(fastifySwaggerUi, {
   routePrefix: "/swagger",
 });
+
+app.register(TintasRouter.route, { prefix: "/tinta" });
 
 app.post("/", async (req, reply) => {
   const model = Langchain.models.gemini();
