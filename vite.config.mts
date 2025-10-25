@@ -15,5 +15,22 @@ export default defineConfig({
         },
       },
     ],
+    coverage: {
+      include: ["src/**/*.ts"],
+      exclude: [
+        "src/server.ts",
+        "src/app.ts",
+        "src/env.ts",
+        "src/lib/prisma.ts",
+        "src/domains/**/infrastructure/http/dto/*.ts",
+        "src/domains/**/infrastructure/http/controllers/*.ts",
+        "src/domains/**/infrastructure/http/docs/*.ts",
+        "src/domains/**/domain/entities/*.ts",
+        "src/domains/**/domain/repositories/*.ts",
+        "src/domains/**/infrastructure/repositories/*.repository.ts",
+        "src/lib/langchain/**/*.ts",
+        "src/generated/**",
+      ],
+    },
   },
 });
