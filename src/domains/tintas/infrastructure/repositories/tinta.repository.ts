@@ -6,6 +6,7 @@ import {
 import { prisma } from "../../../../lib/prisma";
 import { RequestTintaDTO, RequestUpdateTintaDTO } from "../http/dto/tinta.dto";
 import { TintasWhereInput } from "../../../../generated/prisma/models";
+import { TintaQueryMapper } from "../mappers/tinta-query.mapper";
 
 export class TintaRepository implements ITintaRepository {
   async findAll(): Promise<TintaEntity[]> {
@@ -21,7 +22,7 @@ export class TintaRepository implements ITintaRepository {
   }
 
   async getByQuery(query: TintaQuery): Promise<TintaEntity[]> {
-    const where: TintasWhereInput = this.gerarWhereDaQuery(query);
+    const where: TintasWhereInput = TintaQueryMapper.gerarWhereDaQuery(query);
 
     if (!query.features) query.features = [];
 
@@ -29,7 +30,7 @@ export class TintaRepository implements ITintaRepository {
       where,
     });
 
-    return this.filtraTintasPorFeatures(tintas, query.features);
+    return TintaQueryMapper.filtraTintasPorFeatures(tintas, query.features);
   }
 
   async create(tinta: RequestTintaDTO): Promise<TintaEntity> {
@@ -59,39 +60,5 @@ export class TintaRepository implements ITintaRepository {
     await prisma.tintas.delete({
       where: { id },
     });
-  }
-
-  private filtraTintasPorFeatures(
-    tintas: TintaEntity[],
-    queryFeatures: string[]
-  ) {
-    return tintas.filter((tinta) =>
-      queryFeatures.some((queryFeature) =>
-        tinta.features.some((tintaFeature) =>
-          tintaFeature.toLowerCase().includes(queryFeature.toLowerCase())
-        )
-      )
-    );
-  }
-
-  private gerarWhereDaQuery(query: TintaQuery) {
-    const where: TintasWhereInput = {};
-
-    if (query.cor)
-      where.cor = {
-        contains: query.cor,
-        mode: "insensitive",
-      };
-
-    if (query.ambiente) where.ambiente = query.ambiente;
-    if (query.acabamento) where.acabamento = query.acabamento;
-    if (query.linhas) where.linhas = query.linhas;
-
-    if (query.tiposDeSuperfeicie && query.tiposDeSuperfeicie.length > 0)
-      where.tiposDeSuperfeicie = {
-        hasEvery: query.tiposDeSuperfeicie,
-      };
-
-    return where;
   }
 }
