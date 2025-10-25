@@ -1,4 +1,8 @@
 import {
+  RequestTintaDTO,
+  RequestUpdateTinta,
+} from "../../infrastructure/http/dto/tinta.dto";
+import {
   ACABAMENTOS_SCHEMA,
   AMBIENTES_SCHEMA,
   LINHAS_SCHEMA,
@@ -22,4 +26,10 @@ export interface ItintaRepository {
   getByNome(nome: string): Promise<TintaEntity[]>;
 
   getByQuery(query: TintaQuery): Promise<TintaEntity[]>;
+
+  update(id: number, tinta: RequestUpdateTinta): Promise<TintaEntity>;
+
+  create(tinta: RequestTintaDTO): Promise<TintaEntity>;
+
+  delete(id: number): Promise<void>;
 }

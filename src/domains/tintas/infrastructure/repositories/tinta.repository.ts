@@ -4,9 +4,10 @@ import {
   TintaQuery,
 } from "../../domain/repositories/tinta.repository";
 import { prisma } from "../../../../lib/prisma";
+import { RequestTintaDTO, RequestUpdateTinta } from "../http/dto/tinta.dto";
 
 export class TintaRepository implements ItintaRepository {
-  async getById(id: number): Promise<TintaEntity> {
+  async getById(id: number) {
     const tinta = await prisma.tintas.findUnique({
       where: { id },
     });
@@ -16,7 +17,7 @@ export class TintaRepository implements ItintaRepository {
     return tinta;
   }
 
-  async getByNome(nome: string): Promise<TintaEntity[]> {
+  async getByNome(nome: string) {
     const tintas = await prisma.tintas.findMany({
       where: {
         nome: {
@@ -29,7 +30,7 @@ export class TintaRepository implements ItintaRepository {
     return tintas;
   }
 
-  async getByQuery(query: TintaQuery): Promise<TintaEntity[]> {
+  async getByQuery(query: TintaQuery) {
     const tintas = await prisma.tintas.findMany({
       where: {
         cor: {
@@ -46,6 +47,35 @@ export class TintaRepository implements ItintaRepository {
     });
 
     return this.filtraTintasPorFeatures(tintas, query.features);
+  }
+
+  async create(tinta: RequestTintaDTO) {
+    const novaTinta = await prisma.tintas.create({
+      data: {
+        nome: tinta.nome,
+        cor: tinta.cor,
+        ambiente: tinta.ambiente,
+        acabamento: tinta.acabamento,
+        features: tinta.features,
+        linhas: tinta.linhas,
+        tiposDeSuperfeicie: tinta.tiposDeSuperfeicie,
+      },
+    });
+    return novaTinta;
+  }
+
+  async update(id: number, tinta: RequestUpdateTinta) {
+    const tintaAtualizada = await prisma.tintas.update({
+      where: { id },
+      data: tinta,
+    });
+    return tintaAtualizada;
+  }
+
+  async delete(id: number) {
+    await prisma.tintas.delete({
+      where: { id },
+    });
   }
 
   private filtraTintasPorFeatures(
