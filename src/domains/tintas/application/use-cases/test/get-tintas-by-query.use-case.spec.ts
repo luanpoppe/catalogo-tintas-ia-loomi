@@ -7,7 +7,7 @@ import {
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetTintasByQueryUseCase", () => {
-  it("should return tintas by query", async () => {
+  it("deve retornar tintas por query", async () => {
     const tintaEntity = MockTintaBuilder.buildEntity();
     const mockTintas = [tintaEntity];
 

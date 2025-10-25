@@ -3,7 +3,7 @@ import { GetTintaByIdUseCase } from "../get-tinta-by-id.use-case";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetTintaByIdUseCase", () => {
-  it("should return a tinta by id", async () => {
+  it("deve retornar tinta por id", async () => {
     const mockTinta = MockTintaBuilder.buildEntity();
 
     const mockTintaRepository = MockTintaBuilder.buildMockRepository();

@@ -3,7 +3,7 @@ import { GetAllTintasUseCase } from "../get-all-tintas.use-case";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("GetAllTintasUseCase", () => {
-  it("should return all tintas", async () => {
+  it("deve retornar todas as tintas", async () => {
     const mockTintas = MockTintaBuilder.buildEntities();
 
     const mockTintaRepository = MockTintaBuilder.buildMockRepository();

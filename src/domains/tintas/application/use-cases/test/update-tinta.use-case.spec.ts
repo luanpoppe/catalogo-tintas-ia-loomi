@@ -5,7 +5,7 @@ import { RequestTintaDTO } from "@/domains/tintas/infrastructure/http/dto/tinta.
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
 
 describe("UpdateTintaUseCase", () => {
-  it("should update a tinta by id", async () => {
+  it("deve atualizar uma tinta pelo id", async () => {
     const tintaId = 1;
     const updateData: RequestTintaDTO = {
       nome: "Tinta Atualizada",
