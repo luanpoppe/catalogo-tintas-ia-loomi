@@ -20,7 +20,7 @@ export type TintaQuery = {
   tiposDeSuperfeicie: z.infer<typeof TIPOS_DE_SUPERFICIE_SCHEMA>[];
 };
 
-export interface ItintaRepository {
+export interface ITintaRepository {
   getById(id: number): Promise<TintaEntity>;
 
   getByNome(nome: string): Promise<TintaEntity[]>;

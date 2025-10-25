@@ -1,12 +1,12 @@
 import { TintaEntity } from "./../../domain/entities/tintas.entity";
 import {
-  ItintaRepository,
+  ITintaRepository,
   TintaQuery,
 } from "../../domain/repositories/tinta.repository";
 import { prisma } from "../../../../lib/prisma";
 import { RequestTintaDTO, RequestUpdateTinta } from "../http/dto/tinta.dto";
 
-export class TintaRepository implements ItintaRepository {
+export class TintaRepository implements ITintaRepository {
   async getById(id: number) {
     const tinta = await prisma.tintas.findUnique({
       where: { id },
