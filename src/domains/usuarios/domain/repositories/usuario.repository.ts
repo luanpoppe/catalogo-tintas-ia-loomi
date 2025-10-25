@@ -1,4 +1,7 @@
-import { RequestUsuarioDTO } from "../../infrastructure/http/dto/usuario.dto";
+import {
+  RequestUpdateUsuarioDTO,
+  RequestUsuarioDTO,
+} from "../../infrastructure/http/dto/usuario.dto";
 import { UsuarioEntity } from "../entities/usuario.entity";
 
 export interface IUsuarioRepository {
@@ -8,7 +11,7 @@ export interface IUsuarioRepository {
 
   create(usuario: RequestUsuarioDTO): Promise<UsuarioEntity>;
 
-  update(id: number, usuario: RequestUsuarioDTO): Promise<UsuarioEntity>;
+  update(id: number, usuario: RequestUpdateUsuarioDTO): Promise<UsuarioEntity>;
 
   delete(id: number): Promise<void>;
 }
