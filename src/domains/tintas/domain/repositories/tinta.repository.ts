@@ -29,7 +29,7 @@ export interface ITintaRepository {
 
   create(tinta: RequestTintaDTO): Promise<TintaEntity>;
 
-  update(id: number, tinta: RequestTintaDTO): Promise<TintaEntity>;
+  update(id: number, tinta: RequestUpdateTintaDTO): Promise<TintaEntity>;
 
   delete(id: number): Promise<void>;
 }
