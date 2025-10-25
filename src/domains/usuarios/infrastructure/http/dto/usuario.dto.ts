@@ -23,4 +23,6 @@ export type RequestUpdateUsuarioDTO = z.infer<
   typeof RequestUpdateUsuarioDTOSchema
 >;
 
-export type ResponseUsuarioDTO = z.infer<typeof UsuarioSchema>;
+export const ResponseUsuarioDTOSchema = UsuarioSchema;
+
+export type ResponseUsuarioDTO = z.infer<typeof ResponseUsuarioDTOSchema>;

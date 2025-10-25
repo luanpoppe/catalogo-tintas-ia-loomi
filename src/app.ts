@@ -10,6 +10,7 @@ import {
 } from "fastify-type-provider-zod";
 import { Langchain } from "./lib/langchain/langchain";
 import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
+import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -38,6 +39,8 @@ app.register(fastifySwaggerUi, {
 });
 
 app.register(TintasRouter.route, { prefix: "/tinta" });
+
+app.register(UsuariosRouter.route, { prefix: "/usuario" });
 
 app.post("/", async (req, reply) => {
   const model = Langchain.models.gemini();
