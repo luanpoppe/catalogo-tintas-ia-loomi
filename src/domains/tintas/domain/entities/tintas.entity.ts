@@ -10,7 +10,7 @@ export const ACABAMENTOS_SCHEMA = z.enum(["ACETINADO", "FOSCO", "BRILHANTE"]);
 
 export const LINHAS_SCHEMA = z.enum(["PREMIUM", "STANDARD"]);
 
-export const TIPOS_DE_SUPERFICIE_ZOD = z.enum([
+export const TIPOS_DE_SUPERFICIE_SCHEMA = z.enum([
   "ALVENARIA",
   "MADEIRA",
   "FERRO",
@@ -24,7 +24,7 @@ export const TintaSchema = z.object({
   acabamento: ACABAMENTOS_SCHEMA,
   features: z.array(z.string()),
   linhas: LINHAS_SCHEMA,
-  tiposDeSuperfeicie: z.array(TIPOS_DE_SUPERFICIE_ZOD),
+  tiposDeSuperfeicie: z.array(TIPOS_DE_SUPERFICIE_SCHEMA),
 });
 
 export type TintaEntity = z.infer<typeof TintaSchema>;

@@ -2,7 +2,7 @@ import {
   ACABAMENTOS_SCHEMA,
   AMBIENTES_SCHEMA,
   LINHAS_SCHEMA,
-  TIPOS_DE_SUPERFICIE_ZOD,
+  TIPOS_DE_SUPERFICIE_SCHEMA,
 } from "../entities/tintas.entity";
 import { TintaEntity } from "../entities/tintas.entity";
 import z from "zod";
@@ -13,7 +13,7 @@ export type TintaQuery = {
   acabamento: z.infer<typeof ACABAMENTOS_SCHEMA>;
   features: string[];
   linhas: z.infer<typeof LINHAS_SCHEMA>;
-  tiposDeSuperfeicie: z.infer<typeof TIPOS_DE_SUPERFICIE_ZOD>[];
+  tiposDeSuperfeicie: z.infer<typeof TIPOS_DE_SUPERFICIE_SCHEMA>[];
 };
 
 export interface ItintaRepository {
