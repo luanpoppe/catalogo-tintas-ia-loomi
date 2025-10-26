@@ -45,4 +45,13 @@ export class UsuarioRepository implements IUsuarioRepository {
       where: { id },
     });
   }
+
+  async doesIdExist(id: number) {
+    const count = await prisma.usuarios.count({
+      where: { id },
+    });
+
+    if (count === 1) return true;
+    return false;
+  }
 }

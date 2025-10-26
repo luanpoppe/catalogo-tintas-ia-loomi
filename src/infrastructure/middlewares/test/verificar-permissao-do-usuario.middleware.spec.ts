@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { VerifyUserRoleMiddleware } from "../verify-user-role.middleware";
+import { VerificarPermissaoDoUsuarioMiddleware } from "../verificar-permissao-do-usuario.middleware";
 import { PERMISSOES } from "../../../generated/prisma/enums";
 
 describe("VerifyUserRoleMiddleware", () => {
@@ -21,7 +21,9 @@ describe("VerifyUserRoleMiddleware", () => {
   });
 
   it("deve permitir o acesso se o usuário tiver a permissão necessária", async () => {
-    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.ADMIN);
+    const handler = VerificarPermissaoDoUsuarioMiddleware.middleware(
+      PERMISSOES.ADMIN
+    );
     await handler(request, reply);
 
     expect(reply.status).not.toHaveBeenCalled();
@@ -29,11 +31,15 @@ describe("VerifyUserRoleMiddleware", () => {
   });
 
   it("deve retornar 403 se o usuário não tiver a permissão necessária", async () => {
-    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.COMUM);
+    const handler = await VerificarPermissaoDoUsuarioMiddleware.middleware(
+      PERMISSOES.COMUM
+    );
     await handler(request, reply);
 
     expect(reply.status).toHaveBeenCalledWith(403);
-    expect(reply.send).toHaveBeenCalledWith({ message: "Unauthorized." });
+    expect(reply.send).toHaveBeenCalledWith({
+      message: "Acesso não permitido.",
+    });
   });
 
   it("deve retornar 403 se o usuário não tiver tipoDeUsuario definido e uma permissão for necessária", async () => {
@@ -44,10 +50,14 @@ describe("VerifyUserRoleMiddleware", () => {
       },
     } as unknown as FastifyRequest;
 
-    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.ADMIN);
+    const handler = await VerificarPermissaoDoUsuarioMiddleware.middleware(
+      PERMISSOES.ADMIN
+    );
     await handler(requestWithoutRole, reply);
 
     expect(reply.status).toHaveBeenCalledWith(403);
-    expect(reply.send).toHaveBeenCalledWith({ message: "Unauthorized." });
+    expect(reply.send).toHaveBeenCalledWith({
+      message: "Acesso não permitido.",
+    });
   });
 });

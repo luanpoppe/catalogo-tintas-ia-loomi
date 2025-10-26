@@ -1,3 +1,4 @@
+import { RecursoNaoEncontradoDocs } from "@/core/infrastructure/http/docs/recurso-nao-encontrado.docs";
 import { RouteShorthandOptions } from "fastify";
 import z from "zod";
 
@@ -10,11 +11,7 @@ export const DeleteTintaDocs: RouteShorthandOptions = {
     }),
     response: {
       204: z.void().describe("No Content"),
-      404: z
-        .object({
-          message: z.literal("Tinta não encontrada."),
-        })
-        .describe("Not Found"),
+      404: RecursoNaoEncontradoDocs,
       500: z
         .object({
           error: z.literal("Unkown Error"),

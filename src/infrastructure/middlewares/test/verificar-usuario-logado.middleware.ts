@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import { VerifyJwtMiddleware } from "../verify-jwt.middleware";
+import { VerificarUsuarioLogadoMiddleware } from "../verificar-usuario-logado.middleware";
 
 describe("VerifyJwtMiddleware", () => {
   let request: FastifyRequest;
@@ -18,20 +18,22 @@ describe("VerifyJwtMiddleware", () => {
   });
 
   it("deve chamar jwtVerify e não retornar nada se for bem-sucedido", async () => {
-    await VerifyJwtMiddleware.middleware(request, reply);
+    await VerificarUsuarioLogadoMiddleware.middleware(request, reply);
 
     expect(request.jwtVerify).toHaveBeenCalled();
     expect(reply.status).not.toHaveBeenCalled();
     expect(reply.send).not.toHaveBeenCalled();
   });
 
-  it("deve retornar status 401 e mensagem de Unauthorized se jwtVerify falhar", async () => {
+  it("deve retornar status 401 e mensagem de acesso não autorizado se jwtVerify falhar", async () => {
     (request.jwtVerify as Mock).mockRejectedValue(new Error("Token inválido"));
 
-    await VerifyJwtMiddleware.middleware(request, reply);
+    await VerificarUsuarioLogadoMiddleware.middleware(request, reply);
 
     expect(request.jwtVerify).toHaveBeenCalled();
     expect(reply.status).toHaveBeenCalledWith(401);
-    expect(reply.send).toHaveBeenCalledWith({ message: "Unauthorized." });
+    expect(reply.send).toHaveBeenCalledWith({
+      message: "Acesso não autorizado.",
+    });
   });
 });

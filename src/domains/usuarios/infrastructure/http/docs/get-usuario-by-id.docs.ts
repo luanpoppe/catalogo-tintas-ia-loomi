@@ -1,6 +1,7 @@
 import { RouteShorthandOptions } from "fastify";
 import z from "zod";
 import { ResponseUsuarioDTOSchema } from "../dto/usuario.dto";
+import { RecursoNaoEncontradoDocs } from "@/core/infrastructure/http/docs/recurso-nao-encontrado.docs";
 
 export const GetUsuarioByIdDocs: RouteShorthandOptions = {
   schema: {
@@ -11,11 +12,7 @@ export const GetUsuarioByIdDocs: RouteShorthandOptions = {
     }),
     response: {
       200: ResponseUsuarioDTOSchema.describe("Successo"),
-      404: z
-        .object({
-          error: z.literal("Usuário não encontrado"),
-        })
-        .describe("Not Found"),
+      404: RecursoNaoEncontradoDocs,
       500: z
         .object({
           error: z.literal("Unkown Error"),

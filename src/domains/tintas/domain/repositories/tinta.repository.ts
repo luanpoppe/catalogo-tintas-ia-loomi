@@ -32,4 +32,6 @@ export interface ITintaRepository {
   update(id: number, tinta: RequestUpdateTintaDTO): Promise<TintaEntity>;
 
   delete(id: number): Promise<void>;
+
+  doesIdExist(id: number): Promise<boolean>;
 }

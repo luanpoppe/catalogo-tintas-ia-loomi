@@ -15,10 +15,19 @@ export class TintaRepository implements ITintaRepository {
   }
 
   async findById(id: number): Promise<TintaEntity | null> {
-    const tinta = await prisma.tintas.findUnique({
+    const tinta = await prisma.tintas.findUniqueOrThrow({
       where: { id },
     });
     return tinta;
+  }
+
+  async doesIdExist(id: number) {
+    const count = await prisma.tintas.count({
+      where: { id },
+    });
+
+    if (count === 1) return true;
+    return false;
   }
 
   async getByQuery(query: TintaQuery): Promise<TintaEntity[]> {

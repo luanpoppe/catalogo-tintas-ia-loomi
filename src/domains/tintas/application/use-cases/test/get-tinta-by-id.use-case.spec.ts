@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { GetTintaByIdUseCase } from "../get-tinta-by-id.use-case";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 
 describe("GetTintaByIdUseCase", () => {
   it("deve retornar tinta por id", async () => {
@@ -17,5 +18,19 @@ describe("GetTintaByIdUseCase", () => {
 
     expect(mockTintaRepository.findById).toHaveBeenCalledWith(tintaId);
     expect(result).toEqual({ tinta: mockTinta });
+  });
+
+  it("deve lançar exceção em caso de não existir tinta com o id passado", async () => {
+    const mockTintaRepository = MockTintaBuilder.buildMockRepository();
+    mockTintaRepository.findById.mockResolvedValue(null);
+
+    const getTintaByIdUseCase = new GetTintaByIdUseCase(mockTintaRepository);
+
+    const tintaId = 999;
+    const result = getTintaByIdUseCase.execute(tintaId);
+
+    await expect(result).rejects.toBeInstanceOf(RecursoNaoEncontradoException);
+
+    expect(mockTintaRepository.findById).toHaveBeenCalledWith(tintaId);
   });
 });

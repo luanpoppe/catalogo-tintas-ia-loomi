@@ -2,6 +2,7 @@ import { Mocked } from "vitest";
 import { GetUsuarioByIdUseCase } from "../get-usuario-by-id.use-case";
 import { IUsuarioRepository } from "../../../domain/repositories/usuario.repository";
 import { MockUsuarioBuilder } from "test/builders/mock-usuario.builder";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 
 describe("GetUsuarioByIdUseCase", () => {
   let getUsuarioByIdUseCase: GetUsuarioByIdUseCase;
@@ -25,13 +26,13 @@ describe("GetUsuarioByIdUseCase", () => {
     expect(result).toEqual({ usuario: foundUsuario });
   });
 
-  it("deve retornar null se o usuário não for encontrado", async () => {
-    const id = 99;
+  it("deve lançar exceção se o usuário não for encontrado", async () => {
+    const id = 999;
     mockUsuarioRepository.findById.mockResolvedValue(null);
 
-    const result = await getUsuarioByIdUseCase.execute(id);
+    const result = getUsuarioByIdUseCase.execute(id);
 
     expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(id);
-    expect(result).toEqual({ usuario: null });
+    await expect(result).rejects.toBeInstanceOf(RecursoNaoEncontradoException);
   });
 });

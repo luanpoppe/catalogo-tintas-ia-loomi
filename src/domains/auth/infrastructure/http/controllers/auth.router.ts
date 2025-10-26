@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { AuthController } from "./auth.controller";
-import { VerifyJwtMiddleware } from "@/infrastructure/middlewares/verify-jwt.middleware";
+import { VerificarUsuarioLogadoMiddleware } from "@/infrastructure/middlewares/verificar-usuario-logado.middleware";
 import { LoginDocs } from "../docs/login.docs";
 import { RefreshTokenDocs } from "../docs/refresh-token.docs";
 
@@ -10,7 +10,7 @@ export class AuthRouter {
       "/login",
       {
         ...(LoginDocs as any),
-        preHandler: VerifyJwtMiddleware.middleware,
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       AuthController.login
     );
@@ -19,7 +19,7 @@ export class AuthRouter {
       "/refresh",
       {
         ...(RefreshTokenDocs as any),
-        preHandler: VerifyJwtMiddleware.middleware,
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       AuthController.refreshToken
     );

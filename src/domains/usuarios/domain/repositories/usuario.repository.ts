@@ -15,4 +15,6 @@ export interface IUsuarioRepository {
   update(id: number, usuario: RequestUpdateUsuarioDTO): Promise<UsuarioEntity>;
 
   delete(id: number): Promise<void>;
+
+  doesIdExist(id: number): Promise<boolean>;
 }

@@ -45,10 +45,6 @@ export class TintasController {
     const { id } = request.params;
     const { tinta } = await useCase.execute(id);
 
-    if (!tinta) {
-      return reply.status(404).send({ message: "Tinta não encontrada." });
-    }
-
     return reply.status(200).send(tinta);
   }
 
