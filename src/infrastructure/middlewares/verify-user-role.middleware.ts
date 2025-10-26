@@ -1,7 +1,7 @@
 import { PERMISSOES } from "@/generated/prisma/enums";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export class VerifyUserRole {
+export class VerifyUserRoleMiddleware {
   static async middleware(permissaoNecessaria: PERMISSOES) {
     return (request: FastifyRequest, reply: FastifyReply) => {
       const { tipoDeUsuario } = request.user;

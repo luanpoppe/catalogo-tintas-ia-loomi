@@ -5,7 +5,7 @@ import { DeleteUsuarioDocs } from "../docs/delete-usuario.docs";
 import { GetUsuarioByIdDocs } from "../docs/get-usuario-by-id.docs";
 import { GetUsuarioByEmailDocs } from "../docs/get-usuario-by-email.docs";
 import { UpdateUsuarioDocs } from "../docs/update-usuario.docs";
-import { VerifyUserRole } from "@/infrastructure/middlewares/verify-user-role";
+import { VerifyUserRoleMiddleware } from "@/infrastructure/middlewares/verify-user-role.middleware";
 import { VerifyJwtMiddleware } from "@/infrastructure/middlewares/verify-jwt.middleware";
 
 export class UsuariosRouter {
@@ -29,7 +29,7 @@ export class UsuariosRouter {
       "/",
       {
         ...(CreateUsuarioDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       UsuariosController.create
     );
@@ -38,7 +38,7 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(DeleteUsuarioDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       UsuariosController.delete
     );
@@ -47,7 +47,7 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(UpdateUsuarioDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       UsuariosController.update
     );

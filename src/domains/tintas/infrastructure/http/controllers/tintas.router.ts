@@ -7,7 +7,7 @@ import { UpdateTintaDocs } from "../docs/update-tinta.docs";
 import { DeleteTintaDocs } from "../docs/delete-tinta.docs";
 import { GetTintasByQueryDocs } from "../docs/get-tintas-by-query.docs";
 import { VerifyJwtMiddleware } from "@/infrastructure/middlewares/verify-jwt.middleware";
-import { VerifyUserRole } from "@/infrastructure/middlewares/verify-user-role";
+import { VerifyUserRoleMiddleware } from "@/infrastructure/middlewares/verify-user-role.middleware";
 
 export class TintasRouter {
   static async route(app: FastifyInstance) {
@@ -27,7 +27,7 @@ export class TintasRouter {
       "/",
       {
         ...(CreateTintaDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       TintasController.create
     );
@@ -36,7 +36,7 @@ export class TintasRouter {
       "/:id",
       {
         ...(UpdateTintaDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       TintasController.update
     );
@@ -45,7 +45,7 @@ export class TintasRouter {
       "/:id",
       {
         ...(DeleteTintaDocs as any),
-        preHandler: VerifyUserRole.middleware("ADMIN"),
+        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
       },
       TintasController.delete
     );
