@@ -14,6 +14,7 @@ import { Langchain } from "./lib/langchain/langchain";
 import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
 import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
 import { env } from "./env";
+import { AuthRouter } from "./domains/auth/infrastructure/http/controllers/auth.router";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -57,6 +58,8 @@ app.register(fastifyJwt, {
 app.register(TintasRouter.route, { prefix: "/tinta" });
 
 app.register(UsuariosRouter.route, { prefix: "/usuario" });
+
+app.register(AuthRouter.route, { prefix: "/auth" });
 
 app.post("/", async (req, reply) => {
   const model = Langchain.models.gemini();
