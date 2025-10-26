@@ -2,6 +2,8 @@ import fastify from "fastify";
 import { fastifySwagger } from "@fastify/swagger";
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { fastifyCors } from "@fastify/cors";
+import { fastifyJwt } from "@fastify/jwt";
+import { fastifyCookie } from "@fastify/cookie";
 import {
   jsonSchemaTransform,
   validatorCompiler,
@@ -10,6 +12,9 @@ import {
 } from "fastify-type-provider-zod";
 import { Langchain } from "./lib/langchain/langchain";
 import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
+import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
+import { env } from "./env";
+import { AuthRouter } from "./domains/auth/infrastructure/http/controllers/auth.router";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -22,6 +27,8 @@ app.register(fastifyCors, {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 });
+
+app.register(fastifyCookie);
 
 app.register(fastifySwagger, {
   openapi: {
@@ -37,7 +44,22 @@ app.register(fastifySwaggerUi, {
   routePrefix: "/swagger",
 });
 
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: "refreshToken",
+    signed: false,
+  },
+  sign: {
+    expiresIn: "10m",
+  },
+});
+
 app.register(TintasRouter.route, { prefix: "/tinta" });
+
+app.register(UsuariosRouter.route, { prefix: "/usuario" });
+
+app.register(AuthRouter.route, { prefix: "/auth" });
 
 app.post("/", async (req, reply) => {
   const model = Langchain.models.gemini();
