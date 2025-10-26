@@ -1,3 +1,4 @@
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 import { IUsuarioRepository } from "../../domain/repositories/usuario.repository";
 
 export class GetUsuarioByEmailUseCase {
@@ -5,6 +6,8 @@ export class GetUsuarioByEmailUseCase {
 
   async execute(email: string) {
     const usuario = await this.usuarioRepository.findByEmail(email);
+
+    if (!usuario) throw new RecursoNaoEncontradoException();
 
     return { usuario };
   }
