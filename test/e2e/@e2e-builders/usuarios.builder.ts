@@ -6,13 +6,14 @@ import {
 import request from "supertest";
 
 export class UsuariosBuilder {
-  async criarUsuarioComum() {
+  static async criarUsuarioComum() {
     const email = "abc@gmail.com";
+    const senha = "Senha123abc";
 
     const requestBody: RequestUsuarioDTO = {
       nome: "abc",
       email: email,
-      senha: "Senha123abc",
+      senha,
       tipoUsuario: "COMUM",
     };
 
@@ -22,15 +23,17 @@ export class UsuariosBuilder {
 
     return {
       usuario: body as ResponseUsuarioDTO,
+      senha,
     };
   }
-  async criarUsuarioAdmin() {
+  static async criarUsuarioAdmin() {
     const email = "abc@gmail.com";
+    const senha = "Senha123abc";
 
     const requestBody: RequestUsuarioDTO = {
       nome: "abc",
       email: email,
-      senha: "Senha123abc",
+      senha,
       tipoUsuario: "ADMIN",
     };
 
@@ -40,6 +43,7 @@ export class UsuariosBuilder {
 
     return {
       usuario: body as ResponseUsuarioDTO,
+      senha,
     };
   }
 }
