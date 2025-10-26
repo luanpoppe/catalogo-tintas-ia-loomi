@@ -31,6 +31,7 @@ export class MockUsuarioBuilder {
       findById: vi.fn(),
       findByEmail: vi.fn(),
       update: vi.fn(),
+      doesIdExist: vi.fn(),
     };
   }
 
