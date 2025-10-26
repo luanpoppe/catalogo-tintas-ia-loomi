@@ -7,7 +7,7 @@ export class VerifyUserRoleMiddleware {
       const { tipoDeUsuario } = request.user;
 
       if (tipoDeUsuario !== permissaoNecessaria)
-        return reply.status(403).send({ message: "Unauthorized." });
+        return reply.status(403).send({ message: "Acesso não permitido." });
     };
   }
 }

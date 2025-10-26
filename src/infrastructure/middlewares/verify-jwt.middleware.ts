@@ -5,7 +5,7 @@ export class VerifyJwtMiddleware {
     try {
       await request.jwtVerify();
     } catch (error) {
-      return reply.status(401).send({ message: "Unauthorized." });
+      return reply.status(401).send({ message: "Acesso não autorizado." });
     }
   }
 }
