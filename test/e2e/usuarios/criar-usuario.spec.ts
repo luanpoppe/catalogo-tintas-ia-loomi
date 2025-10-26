@@ -13,27 +13,30 @@ describe("Criar usuário", () => {
 
   it("deve ser possível criar um usuário", async () => {
     const email = "abc@gmail.com";
+    const nome = "abc";
+    const senha = "Senha123abc";
+    const tipoUsuario = "COMUM";
 
     const body: RequestUsuarioDTO = {
-      nome: "abc",
-      email: email,
-      senha: "Senha123abc",
-      tipoUsuario: "COMUM",
+      nome,
+      email,
+      senha,
+      tipoUsuario,
     };
 
     const resposta = await request(app.server).post("/usuario").send(body);
 
-    resposta.body;
-
     expect(resposta.statusCode).toEqual(201);
     expect(resposta.body).toEqual(
       expect.objectContaining({
+        id: expect.any(Number),
         email,
+        nome,
+        tipoUsuario,
       })
     );
 
-    console.log({ resposta: resposta.body });
-
     expect(resposta.body.passwordHash).toBeUndefined();
+    expect(resposta.body.senha).toBeUndefined();
   });
 });
