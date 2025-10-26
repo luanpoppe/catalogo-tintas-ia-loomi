@@ -5,7 +5,7 @@ import {
   ResponseUsuarioDTOSchema,
 } from "../dto/usuario.dto";
 import { RecursoNaoEncontradoDocs } from "@/core/infrastructure/http/docs/recurso-nao-encontrado.docs";
-import { ValidationDocs } from "@/core/infrastructure/http/docs/validation.docs";
+import { ErroDeValidacaoDocs } from "@/core/infrastructure/http/docs/erro-de-validacao.docs";
 
 export const UpdateUsuarioDocs: RouteShorthandOptions = {
   schema: {
@@ -17,7 +17,7 @@ export const UpdateUsuarioDocs: RouteShorthandOptions = {
     body: RequestUsuarioDTOSchema,
     response: {
       200: ResponseUsuarioDTOSchema.describe("Successo"),
-      400: ValidationDocs,
+      400: ErroDeValidacaoDocs,
       404: RecursoNaoEncontradoDocs,
       500: z
         .object({

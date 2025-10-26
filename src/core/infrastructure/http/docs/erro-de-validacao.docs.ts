@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const ValidationDocs = z.object({
+export const ErroDeValidacaoDocs = z.object({
   error: z.array(
     z
       .object({
