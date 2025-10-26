@@ -4,6 +4,8 @@ import {
   RequestTintaDTOSchema,
   ResponseTintaDTOSchema,
 } from "../dto/tinta.dto";
+import { ValidationDocs } from "@/core/infrastructure/http/docs/validation.docs";
+import { ResourceNotFoundDocs } from "@/core/infrastructure/http/docs/resource-not-found.docs";
 
 export const UpdateTintaDocs: RouteShorthandOptions = {
   schema: {
@@ -15,11 +17,8 @@ export const UpdateTintaDocs: RouteShorthandOptions = {
     body: RequestTintaDTOSchema,
     response: {
       200: ResponseTintaDTOSchema.describe("Success"),
-      404: z
-        .object({
-          message: z.literal("Tinta não encontrada."),
-        })
-        .describe("Not Found"),
+      400: ValidationDocs,
+      404: ResourceNotFoundDocs,
       500: z
         .object({
           error: z.literal("Unkown Error"),
