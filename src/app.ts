@@ -3,6 +3,7 @@ import { fastifySwagger } from "@fastify/swagger";
 import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import { fastifyCors } from "@fastify/cors";
 import { fastifyJwt } from "@fastify/jwt";
+import { fastifyCookie } from "@fastify/cookie";
 import {
   jsonSchemaTransform,
   validatorCompiler,
@@ -25,6 +26,8 @@ app.register(fastifyCors, {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 });
+
+app.register(fastifyCookie);
 
 app.register(fastifySwagger, {
   openapi: {
