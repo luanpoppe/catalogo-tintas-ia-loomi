@@ -21,10 +21,8 @@ export class AuthController {
     try {
       const { usuario } = await useCase.execute(req.body);
 
-      const { accessToken, refreshToken } = await this.gerarTokensLogin(
-        usuario,
-        reply
-      );
+      const { accessToken, refreshToken } =
+        await AuthController.gerarTokensLogin(usuario, reply);
 
       return reply
         .setCookie("refreshToken", refreshToken, {

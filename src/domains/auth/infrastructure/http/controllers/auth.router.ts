@@ -10,7 +10,6 @@ export class AuthRouter {
       "/login",
       {
         ...(LoginDocs as any),
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       AuthController.login
     );
