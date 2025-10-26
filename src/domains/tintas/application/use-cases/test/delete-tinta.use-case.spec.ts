@@ -7,6 +7,7 @@ describe("DeleteTintaUseCase", () => {
   it("deve deletar um tinta pelo id", async () => {
     const mockTintaRepository = MockTintaBuilder.buildMockRepository();
     mockTintaRepository.delete.mockResolvedValue(undefined);
+    mockTintaRepository.doesIdExist.mockResolvedValue(true);
 
     const deleteTintaUseCase = new DeleteTintaUseCase(mockTintaRepository);
 
