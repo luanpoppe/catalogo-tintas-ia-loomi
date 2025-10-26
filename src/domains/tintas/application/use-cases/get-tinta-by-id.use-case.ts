@@ -1,4 +1,4 @@
-import { ResourceNotFoundException } from "@/core/exceptions/resource-not-found.exception";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 import { ITintaRepository } from "../../domain/repositories/tinta.repository";
 
 export class GetTintaByIdUseCase {
@@ -7,7 +7,7 @@ export class GetTintaByIdUseCase {
   async execute(id: number) {
     const tinta = await this.tintaRepository.findById(id);
 
-    if (!tinta) throw new ResourceNotFoundException();
+    if (!tinta) throw new RecursoNaoEncontradoException();
 
     return { tinta };
   }

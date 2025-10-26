@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const ResourceNotFoundDocs = z
+export const RecursoNaoEncontradoDocs = z
   .object({
     error: z.string(),
   })

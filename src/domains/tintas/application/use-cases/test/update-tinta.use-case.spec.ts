@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { UpdateTintaUseCase } from "../update-tinta.use-case";
 import { RequestTintaDTO } from "@/domains/tintas/infrastructure/http/dto/tinta.dto";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
-import { ResourceNotFoundException } from "@/core/exceptions/resource-not-found.exception";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 
 describe("UpdateTintaUseCase", () => {
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("UpdateTintaUseCase", () => {
     const tintaId = 999;
     const result = updateTintaUseCase.execute(tintaId, updateData);
 
-    await expect(result).rejects.toBeInstanceOf(ResourceNotFoundException);
+    await expect(result).rejects.toBeInstanceOf(RecursoNaoEncontradoException);
 
     expect(mockTintaRepository.doesIdExist).toHaveBeenCalledWith(tintaId);
     expect(mockTintaRepository.update).not.toHaveBeenCalled();

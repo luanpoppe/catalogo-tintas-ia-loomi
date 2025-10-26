@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { DeleteTintaUseCase } from "../delete-tinta.use-case";
 import { MockTintaBuilder } from "test/builders/mock-tinta.builder";
-import { ResourceNotFoundException } from "@/core/exceptions/resource-not-found.exception";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 
 describe("DeleteTintaUseCase", () => {
   it("deve deletar um tinta pelo id", async () => {
@@ -26,7 +26,7 @@ describe("DeleteTintaUseCase", () => {
     const tintaId = 999;
     const result = deleteTintaUseCase.execute(tintaId);
 
-    await expect(result).rejects.toBeInstanceOf(ResourceNotFoundException);
+    await expect(result).rejects.toBeInstanceOf(RecursoNaoEncontradoException);
 
     expect(mockTintaRepository.doesIdExist).toHaveBeenCalledWith(tintaId);
     expect(mockTintaRepository.delete).not.toHaveBeenCalled();
