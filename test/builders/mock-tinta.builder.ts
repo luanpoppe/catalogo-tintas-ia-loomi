@@ -53,6 +53,7 @@ export class MockTintaBuilder {
       update: vi.fn(),
       delete: vi.fn(),
       getByQuery: vi.fn(),
+      doesIdExist: vi.fn(),
     };
   }
 }
