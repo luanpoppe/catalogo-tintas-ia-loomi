@@ -1,6 +1,7 @@
-import { RouteShorthandOptions } from "fastify";
 import z from "zod";
+import { RouteShorthandOptions } from "fastify";
 import { ResponseTintaDTOSchema } from "../dto/tinta.dto";
+import { ResourceNotFoundDocs } from "@/core/infrastructure/http/docs/resource-not-found.docs";
 
 export const GetTintaByIdDocs: RouteShorthandOptions = {
   schema: {
@@ -11,11 +12,7 @@ export const GetTintaByIdDocs: RouteShorthandOptions = {
     }),
     response: {
       200: ResponseTintaDTOSchema.describe("Success"),
-      404: z
-        .object({
-          message: z.literal("Tinta não encontrada."),
-        })
-        .describe("Not Found"),
+      404: ResourceNotFoundDocs,
       500: z
         .object({
           error: z.literal("Unkown Error"),
