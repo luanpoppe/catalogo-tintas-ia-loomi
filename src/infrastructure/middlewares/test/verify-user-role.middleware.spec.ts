@@ -1,0 +1,53 @@
+import { FastifyReply, FastifyRequest } from "fastify";
+import { VerifyUserRoleMiddleware } from "../verify-user-role.middleware";
+import { PERMISSOES } from "../../../generated/prisma/enums";
+
+describe("VerifyUserRoleMiddleware", () => {
+  let request: FastifyRequest;
+  let reply: FastifyReply;
+
+  beforeEach(() => {
+    request = {
+      user: {
+        sub: 1,
+        tipoDeUsuario: PERMISSOES.ADMIN as PERMISSOES | undefined,
+      },
+    } as unknown as FastifyRequest;
+
+    reply = {
+      status: vi.fn(() => reply),
+      send: vi.fn(),
+    } as unknown as FastifyReply;
+  });
+
+  it("deve permitir o acesso se o usuário tiver a permissão necessária", async () => {
+    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.ADMIN);
+    await handler(request, reply);
+
+    expect(reply.status).not.toHaveBeenCalled();
+    expect(reply.send).not.toHaveBeenCalled();
+  });
+
+  it("deve retornar 403 se o usuário não tiver a permissão necessária", async () => {
+    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.COMUM);
+    await handler(request, reply);
+
+    expect(reply.status).toHaveBeenCalledWith(403);
+    expect(reply.send).toHaveBeenCalledWith({ message: "Unauthorized." });
+  });
+
+  it("deve retornar 403 se o usuário não tiver tipoDeUsuario definido e uma permissão for necessária", async () => {
+    const requestWithoutRole = {
+      user: {
+        sub: "user-id",
+        tipoDeUsuario: undefined,
+      },
+    } as unknown as FastifyRequest;
+
+    const handler = await VerifyUserRoleMiddleware.middleware(PERMISSOES.ADMIN);
+    await handler(requestWithoutRole, reply);
+
+    expect(reply.status).toHaveBeenCalledWith(403);
+    expect(reply.send).toHaveBeenCalledWith({ message: "Unauthorized." });
+  });
+});
