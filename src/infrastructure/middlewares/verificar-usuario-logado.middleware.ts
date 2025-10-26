@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export class VerifyJwtMiddleware {
+export class VerificarUsuarioLogadoMiddleware {
   static async middleware(request: FastifyRequest, reply: FastifyReply) {
     try {
       await request.jwtVerify();

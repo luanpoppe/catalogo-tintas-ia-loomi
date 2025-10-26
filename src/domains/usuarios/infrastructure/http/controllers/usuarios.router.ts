@@ -5,14 +5,17 @@ import { DeleteUsuarioDocs } from "../docs/delete-usuario.docs";
 import { GetUsuarioByIdDocs } from "../docs/get-usuario-by-id.docs";
 import { GetUsuarioByEmailDocs } from "../docs/get-usuario-by-email.docs";
 import { UpdateUsuarioDocs } from "../docs/update-usuario.docs";
-import { VerifyUserRoleMiddleware } from "@/infrastructure/middlewares/verify-user-role.middleware";
-import { VerifyJwtMiddleware } from "@/infrastructure/middlewares/verify-jwt.middleware";
+import { VerificarPermissaoDoUsuarioMiddleware } from "@/infrastructure/middlewares/verificar-permissao-do-usuario.middleware";
+import { VerificarUsuarioLogadoMiddleware } from "@/infrastructure/middlewares/verificar-usuario-logado.middleware";
 
 export class UsuariosRouter {
   static async route(app: FastifyInstance) {
     app.get(
       "/:id",
-      { ...GetUsuarioByIdDocs, preHandler: VerifyJwtMiddleware.middleware },
+      {
+        ...GetUsuarioByIdDocs,
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+      },
       UsuariosController.getById as any
     );
 
@@ -20,7 +23,7 @@ export class UsuariosRouter {
       "/email/:email",
       {
         ...(GetUsuarioByEmailDocs as any),
-        preHandler: VerifyJwtMiddleware.middleware,
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       UsuariosController.getByEmail as any
     );
@@ -29,7 +32,7 @@ export class UsuariosRouter {
       "/",
       {
         ...(CreateUsuarioDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       UsuariosController.create
     );
@@ -38,7 +41,7 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(DeleteUsuarioDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       UsuariosController.delete
     );
@@ -47,7 +50,7 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(UpdateUsuarioDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       UsuariosController.update
     );

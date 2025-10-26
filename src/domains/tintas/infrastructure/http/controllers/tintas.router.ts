@@ -6,12 +6,12 @@ import { GetTintaByIdDocs } from "../docs/get-tinta-by-id.docs";
 import { UpdateTintaDocs } from "../docs/update-tinta.docs";
 import { DeleteTintaDocs } from "../docs/delete-tinta.docs";
 import { GetTintasByQueryDocs } from "../docs/get-tintas-by-query.docs";
-import { VerifyJwtMiddleware } from "@/infrastructure/middlewares/verify-jwt.middleware";
-import { VerifyUserRoleMiddleware } from "@/infrastructure/middlewares/verify-user-role.middleware";
+import { VerificarUsuarioLogadoMiddleware } from "@/infrastructure/middlewares/verificar-usuario-logado.middleware";
+import { VerificarPermissaoDoUsuarioMiddleware } from "@/infrastructure/middlewares/verificar-permissao-do-usuario.middleware";
 
 export class TintasRouter {
   static async route(app: FastifyInstance) {
-    app.addHook("preHandler", VerifyJwtMiddleware.middleware);
+    app.addHook("preHandler", VerificarUsuarioLogadoMiddleware.middleware);
 
     app.get("/", GetAllTintasDocs as any, TintasController.getAll);
 
@@ -27,7 +27,7 @@ export class TintasRouter {
       "/",
       {
         ...(CreateTintaDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       TintasController.create
     );
@@ -36,7 +36,7 @@ export class TintasRouter {
       "/:id",
       {
         ...(UpdateTintaDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       TintasController.update
     );
@@ -45,7 +45,7 @@ export class TintasRouter {
       "/:id",
       {
         ...(DeleteTintaDocs as any),
-        preHandler: VerifyUserRoleMiddleware.middleware("ADMIN"),
+        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       TintasController.delete
     );
