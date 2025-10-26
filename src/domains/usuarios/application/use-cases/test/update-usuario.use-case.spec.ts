@@ -4,6 +4,7 @@ import { IUsuarioRepository } from "../../../domain/repositories/usuario.reposit
 import { RequestUpdateUsuarioDTO } from "../../../infrastructure/http/dto/usuario.dto";
 import { UsuarioEntity } from "../../../domain/entities/usuario.entity";
 import { MockUsuarioBuilder } from "test/builders/mock-usuario.builder";
+import { RecursoNaoEncontradoException } from "@/core/exceptions/recurso-nao-encontrado.exception";
 
 describe("UpdateUsuarioUseCase", () => {
   let updateUsuarioUseCase: UpdateUsuarioUseCase;
@@ -30,6 +31,7 @@ describe("UpdateUsuarioUseCase", () => {
     };
 
     mockUsuarioRepository.update.mockResolvedValue(updatedUsuario);
+    mockUsuarioRepository.doesIdExist.mockResolvedValue(true);
 
     const result = await updateUsuarioUseCase.execute(usuarioId, updateBody);
 
@@ -38,5 +40,28 @@ describe("UpdateUsuarioUseCase", () => {
       updateBody
     );
     expect(result).toEqual({ usuario: updatedUsuario });
+  });
+
+  it("deve lançar exceção em caso de não existir usuário com o id passado", async () => {
+    const updateBody: RequestUpdateUsuarioDTO = {
+      nome: "Updated Name",
+      email: "updated@example.com",
+      tipoUsuario: "ADMIN",
+    };
+
+    const usuarioId = 999;
+    const updatedUsuario: UsuarioEntity = {
+      id: usuarioId,
+      ...updateBody,
+    };
+
+    mockUsuarioRepository.doesIdExist.mockResolvedValue(false);
+
+    const result = updateUsuarioUseCase.execute(usuarioId, updatedUsuario);
+
+    await expect(result).rejects.toBeInstanceOf(RecursoNaoEncontradoException);
+
+    expect(mockUsuarioRepository.doesIdExist).toHaveBeenCalledWith(usuarioId);
+    expect(mockUsuarioRepository.update).not.toHaveBeenCalled();
   });
 });
