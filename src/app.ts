@@ -15,6 +15,9 @@ import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/t
 import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
 import { env } from "./env";
 import { AuthRouter } from "./domains/auth/infrastructure/http/controllers/auth.router";
+import { BaseException } from "./core/exceptions/base.exception";
+import z, { ZodError } from "zod";
+import { ExceptionHandler } from "./core/exceptions/exception-handler";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -29,6 +32,10 @@ app.register(fastifyCors, {
 });
 
 app.register(fastifyCookie);
+
+app.setErrorHandler((error, app, reply) =>
+  ExceptionHandler.execute(error, reply)
+);
 
 app.register(fastifySwagger, {
   openapi: {
