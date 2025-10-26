@@ -3,6 +3,7 @@ import { IUsuarioRepository } from "@/domains/usuarios/domain/repositories/usuar
 import { IEncryptInterface } from "@/lib/encrypt/encrypt.interface";
 import { MockUsuarioBuilder } from "test/builders/mock-usuario.builder";
 import { Usuarios } from "@/generated/prisma/client"; // Importar Usuarios do Prisma Client
+import { LoginInvalidoException } from "@/domains/auth/domain/exceptions/login-invalido.exception";
 
 describe("LoginUseCase", () => {
   let loginUseCase: LoginUseCase;
@@ -51,7 +52,7 @@ describe("LoginUseCase", () => {
         email: "email-nao-cadastrado@example.com",
         senha: "senhaQualquer123",
       })
-    ).rejects.toThrow("Email e/ou senha incorretos.");
+    ).rejects.toBeInstanceOf(LoginInvalidoException);
     expect(usuarioRepository.findByEmail).toHaveBeenCalledWith(
       "email-nao-cadastrado@example.com"
     );
@@ -73,7 +74,7 @@ describe("LoginUseCase", () => {
         email: user.email,
         senha: "senhaIncorreta",
       })
-    ).rejects.toThrow("Email e/ou senha incorretos.");
+    ).rejects.toBeInstanceOf(LoginInvalidoException);
     expect(usuarioRepository.findByEmail).toHaveBeenCalledWith(user.email);
     expect(encryptService.verify).toHaveBeenCalledWith(
       "senhaIncorreta",
