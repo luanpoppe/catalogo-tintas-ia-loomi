@@ -32,7 +32,6 @@ export class UsuariosRouter {
       "/",
       {
         ...(CreateUsuarioDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
       },
       UsuariosController.create
     );
