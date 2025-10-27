@@ -10,13 +10,10 @@ import {
   serializerCompiler,
   ZodTypeProvider,
 } from "fastify-type-provider-zod";
-import { Langchain } from "./lib/langchain/langchain";
 import { TintasRouter } from "./domains/tintas/infrastructure/http/controllers/tintas.router";
 import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controllers/usuarios.router";
 import { env } from "./env";
 import { AuthRouter } from "./domains/auth/infrastructure/http/controllers/auth.router";
-import { BaseException } from "./core/exceptions/base.exception";
-import z, { ZodError } from "zod";
 import { ExceptionHandler } from "./core/exceptions/exception-handler";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
@@ -67,24 +64,5 @@ app.register(TintasRouter.route, { prefix: "/tinta" });
 app.register(UsuariosRouter.route, { prefix: "/usuario" });
 
 app.register(AuthRouter.route, { prefix: "/auth" });
-
-app.post("/", async (req, reply) => {
-  const model = Langchain.models.gemini();
-
-  try {
-    const agent = await Langchain.createAgent({ model });
-    const res = await agent.invoke(
-      {
-        messages: [{ role: "user", content: (req.body as any).content }],
-      },
-      { configurable: { thread_id: "1" } }
-    );
-
-    return reply.status(200).send({ msg: "Hello", res });
-  } catch (error: any) {
-    console.error(error);
-    throw new Error();
-  }
-});
 
 export { app };
