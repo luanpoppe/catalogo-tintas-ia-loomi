@@ -15,7 +15,7 @@
     "types": ["node", "vitest/globals"],
     // and npm install -D @types/node
 
-    "baseUrl": "./",
+    "baseUrl": "./packages/api",
     "paths": {
       "@/*": ["./src/*"]
     },
