@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { VerificarPermissaoDoUsuarioMiddleware } from "../verificar-permissao-do-usuario.middleware";
 import { PERMISSOES } from "../../../generated/prisma/enums";
 
-describe("VerifyUserRoleMiddleware", () => {
+describe("VerificarPermissaoDoUsuarioMiddleware", () => {
   let request: FastifyRequest;
   let reply: FastifyReply;
 
@@ -31,14 +31,14 @@ describe("VerifyUserRoleMiddleware", () => {
   });
 
   it("deve retornar 403 se o usuário não tiver a permissão necessária", async () => {
-    const handler = await VerificarPermissaoDoUsuarioMiddleware.middleware(
+    const handler = VerificarPermissaoDoUsuarioMiddleware.middleware(
       PERMISSOES.COMUM
     );
     await handler(request, reply);
 
     expect(reply.status).toHaveBeenCalledWith(403);
     expect(reply.send).toHaveBeenCalledWith({
-      message: "Acesso não permitido.",
+      error: "Acesso não permitido.",
     });
   });
 
@@ -57,7 +57,7 @@ describe("VerifyUserRoleMiddleware", () => {
 
     expect(reply.status).toHaveBeenCalledWith(403);
     expect(reply.send).toHaveBeenCalledWith({
-      message: "Acesso não permitido.",
+      error: "Acesso não permitido.",
     });
   });
 });

@@ -14,6 +14,15 @@ export default defineConfig({
           dir: "src/",
         },
       },
+      {
+        extends: true,
+        test: {
+          name: "e2e",
+          dir: "test/e2e/",
+          environment:
+            "./prisma/vitest-environment-prisma/prisma-test-environment.ts",
+        },
+      },
     ],
     coverage: {
       include: ["src/**/*.ts"],

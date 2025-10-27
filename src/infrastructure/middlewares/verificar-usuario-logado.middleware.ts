@@ -5,7 +5,7 @@ export class VerificarUsuarioLogadoMiddleware {
     try {
       await request.jwtVerify();
     } catch (error) {
-      return reply.status(401).send({ message: "Acesso não autorizado." });
+      return reply.status(401).send({ error: "Acesso não autorizado." });
     }
   }
 }

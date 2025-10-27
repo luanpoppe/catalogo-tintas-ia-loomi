@@ -7,7 +7,7 @@ export class VerificarPermissaoDoUsuarioMiddleware {
       const { tipoDeUsuario } = request.user;
 
       if (tipoDeUsuario !== permissaoNecessaria)
-        return reply.status(403).send({ message: "Acesso não permitido." });
+        return reply.status(403).send({ error: "Acesso não permitido." });
     };
   }
 }

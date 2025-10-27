@@ -22,7 +22,9 @@ export class UsuariosController {
 
     const useCase = new CreateUsuarioUseCase(usuarioRepository, encryptService);
 
-    const { usuario } = await useCase.execute(req.body);
+    const tipoUsuario = req?.user?.tipoDeUsuario;
+
+    const { usuario } = await useCase.execute(req.body, tipoUsuario);
 
     return reply.status(201).send(usuario);
   }

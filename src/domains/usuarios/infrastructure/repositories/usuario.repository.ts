@@ -19,24 +19,27 @@ export class UsuarioRepository implements IUsuarioRepository {
 
   async create(usuarioData: RequestUsuarioDTO) {
     const { senha, ...rest } = usuarioData;
-    const novoUsuario = await prisma.usuarios.create({
+    const { passwordHash, ...novoUsuario } = await prisma.usuarios.create({
       data: {
         ...rest,
         passwordHash: senha,
       },
     });
+
     return novoUsuario;
   }
 
   async update(id: number, usuarioData: RequestUsuarioDTO) {
     const { senha, ...rest } = usuarioData;
-    const usuarioAtualizado = await prisma.usuarios.update({
-      where: { id },
-      data: {
-        ...rest,
-        passwordHash: senha,
-      },
-    });
+    const { passwordHash, ...usuarioAtualizado } = await prisma.usuarios.update(
+      {
+        where: { id },
+        data: {
+          ...rest,
+          passwordHash: senha,
+        },
+      }
+    );
     return usuarioAtualizado;
   }
 

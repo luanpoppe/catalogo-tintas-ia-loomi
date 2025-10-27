@@ -1,6 +1,8 @@
 import { IEncryptInterface } from "@/lib/encrypt/encrypt.interface";
 import { RequestUsuarioDTO } from "../../infrastructure/http/dto/usuario.dto";
 import { IUsuarioRepository } from "./../../domain/repositories/usuario.repository";
+import { PERMISSOES } from "@/generated/prisma/enums";
+import { UsuarioSemPremissaoException } from "@/core/exceptions/usuario-sem-premissao.exception";
 
 export class CreateUsuarioUseCase {
   constructor(
@@ -8,12 +10,19 @@ export class CreateUsuarioUseCase {
     private encrypt: IEncryptInterface
   ) {}
 
-  async execute(body: RequestUsuarioDTO) {
-    const { senha, ...rest } = body;
+  async execute(body: RequestUsuarioDTO, tipoDeUsuario?: PERMISSOES) {
+    const { senha, ...usuarioBody } = body;
+
+    const isUserAdmin = tipoDeUsuario === "ADMIN";
+
+    if (usuarioBody.tipoUsuario === "ADMIN" && !isUserAdmin) {
+      throw new UsuarioSemPremissaoException();
+    }
+
     const senhaHashed = await this.encrypt.hash(senha);
 
     const bodyComSenhaHashed: RequestUsuarioDTO = {
-      ...rest,
+      ...usuarioBody,
       senha: senhaHashed,
     };
 
