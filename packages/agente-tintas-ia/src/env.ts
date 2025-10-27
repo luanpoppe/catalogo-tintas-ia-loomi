@@ -4,6 +4,8 @@ import z from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["dev", "prod", "test"]),
   GEMINI_API_KEY: z.string().nonempty(),
+  DATABASE_URL: z.string().nonempty(),
+  OPENAI_API_KEY: z.string().nonempty(),
 });
 
 const result = envSchema.safeParse(process.env);

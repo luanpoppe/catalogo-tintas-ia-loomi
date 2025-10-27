@@ -1,12 +1,16 @@
-import "dotenv/config";
+import { config } from "dotenv";
 import z from "zod";
+import path from "node:path";
+
+const caminhoEnv = path.resolve(__dirname, "../.env");
+config({ path: caminhoEnv });
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   NODE_ENV: z.enum(["dev", "prod", "test"]),
   DATABASE_URL: z.string().nonempty(),
   JWT_SECRET: z.string().nonempty(),
-  OPEN_AI_KEY: z.string().nonempty(),
+  OPENAI_API_KEY: z.string().nonempty(),
 });
 
 const result = envSchema.safeParse(process.env);
