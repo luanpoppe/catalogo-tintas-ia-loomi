@@ -1,0 +1,31 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx watch src/server.ts",
+    "test": "vitest run --project unit",
+    "test:coverage": "vitest run --project unit --coverage",
+    "test:e2e": "vitest run --project e2e",
+    "test:e2e:coverage": "vitest run --project e2e --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cookie": "11.0.2",
+    "@fastify/cors": "11.1.0",
+    "@fastify/jwt": "10.0.0",
+    "@fastify/swagger": "9.5.2",
+    "@fastify/swagger-ui": "5.2.3",
+    "@prisma/client": "6.18.0",
+    "bcryptjs": "3.0.2",
+    "dotenv": "17.2.3",
+    "fastify": "5.6.1",
+    "fastify-type-provider-zod": "6.1.0",
+    "pg": "8.16.3",
+    "zod": "4.1.12",
+    "@catalogo-tintas/agente-ia": "file:../agente-tintas-ia"
+  }
+}
