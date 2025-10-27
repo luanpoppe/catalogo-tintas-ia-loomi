@@ -38,7 +38,7 @@ enum TIPOS_DE_SUPERFICIE {
 }
 
 model Tintas {
-  id                 Int                   @id @default(autoincrement())
+  id                 Int                          @id @default(autoincrement())
   nome               String
   cor                String
   ambiente           AMBIENTES
@@ -46,6 +46,7 @@ model Tintas {
   features           String[]
   linhas             LINHAS
   tiposDeSuperfeicie TIPOS_DE_SUPERFICIE[]
+  embedding          Unsupported("vector(1536)")?
 
   @@map("tintas")
 }
