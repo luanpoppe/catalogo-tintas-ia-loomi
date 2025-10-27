@@ -29,6 +29,7 @@
     "fastify-type-provider-zod": "6.1.0",
     "langchain": "1.0.1",
     "pg": "8.16.3",
-    "zod": "4.1.12"
+    "zod": "4.1.12",
+    "@catalogo-tintas/agente-ia": "file:../agente-tintas-ia"
   }
 }
