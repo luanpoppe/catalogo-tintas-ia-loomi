@@ -32,7 +32,7 @@ export class UsuariosBuilder {
   }
 
   static async criarUsuarioAdmin() {
-    const email = "abc@gmail.com";
+    const email = "abcAdmin@gmail.com";
     const senha = "Senha123abc";
 
     const requestBody: RequestUsuarioDTO = {
@@ -54,6 +54,29 @@ export class UsuariosBuilder {
 
   static async criarELogarUsuarioComum() {
     const usuarioCriado = await this.criarUsuarioComum();
+
+    const requestBody: RequestLoginDTO = {
+      email: usuarioCriado.usuario.email,
+      senha: usuarioCriado.senha,
+    };
+
+    const resposta = await request(app.server)
+      .post("/auth/login")
+      .send(requestBody);
+
+    const cookies = resposta.get("Set-Cookie") ?? [];
+
+    const { accessToken }: ResponseLoginDTO = resposta.body;
+
+    return {
+      ...usuarioCriado,
+      accessToken,
+      cookies,
+    };
+  }
+
+  static async criarELogarUsuarioAdmin() {
+    const usuarioCriado = await this.criarUsuarioAdmin();
 
     const requestBody: RequestLoginDTO = {
       email: usuarioCriado.usuario.email,
