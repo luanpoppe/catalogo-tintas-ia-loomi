@@ -1,5 +1,9 @@
 import { app } from "@/app";
 import {
+  RequestLoginDTO,
+  ResponseLoginDTO,
+} from "@/domains/auth/infrastructure/http/dto/login.dto";
+import {
   RequestUsuarioDTO,
   ResponseUsuarioDTO,
 } from "@/domains/usuarios/infrastructure/http/dto/usuario.dto";
@@ -26,6 +30,7 @@ export class UsuariosBuilder {
       senha,
     };
   }
+
   static async criarUsuarioAdmin() {
     const email = "abc@gmail.com";
     const senha = "Senha123abc";
@@ -44,6 +49,29 @@ export class UsuariosBuilder {
     return {
       usuario: body as ResponseUsuarioDTO,
       senha,
+    };
+  }
+
+  static async criarELogarUsuarioComum() {
+    const usuarioCriado = await this.criarUsuarioComum();
+
+    const requestBody: RequestLoginDTO = {
+      email: usuarioCriado.usuario.email,
+      senha: usuarioCriado.senha,
+    };
+
+    const resposta = await request(app.server)
+      .post("/auth/login")
+      .send(requestBody);
+
+    const cookies = resposta.get("Set-Cookie") ?? [];
+
+    const { accessToken }: ResponseLoginDTO = resposta.body;
+
+    return {
+      ...usuarioCriado,
+      accessToken,
+      cookies,
     };
   }
 }
