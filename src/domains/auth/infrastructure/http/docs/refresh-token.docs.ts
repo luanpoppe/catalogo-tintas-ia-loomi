@@ -1,18 +1,20 @@
 import z from "zod";
-import { RouteShorthandOptions } from "fastify";
+import { FastifySchema, RouteShorthandOptions } from "fastify";
 import { ResponseLoginDTOSchema } from "../dto/login.dto";
 
-export const RefreshTokenDocs: RouteShorthandOptions = {
-  schema: {
-    tags: ["auth"],
-    description: "Realizar o refresh do token JWT",
-    response: {
-      200: ResponseLoginDTOSchema.describe("Successo"),
-      500: z
-        .object({
-          error: z.literal("Unkown Error"),
-        })
-        .describe("Internal Server Error"),
-    },
+const schema: FastifySchema = {
+  tags: ["auth"],
+  description: "Realizar o refresh do token JWT",
+  response: {
+    200: ResponseLoginDTOSchema.describe("Successo"),
+    500: z
+      .object({
+        error: z.literal("Unkown Error"),
+      })
+      .describe("Internal Server Error"),
   },
+};
+
+export const RefreshTokenDocs = {
+  schema,
 };

@@ -9,7 +9,7 @@ export class AuthRouter {
     app.post(
       "/login",
       {
-        ...(LoginDocs as any),
+        ...LoginDocs,
       },
       AuthController.login
     );
@@ -17,7 +17,7 @@ export class AuthRouter {
     app.post(
       "/refresh",
       {
-        ...(RefreshTokenDocs as any),
+        ...RefreshTokenDocs,
         preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       AuthController.refreshToken
