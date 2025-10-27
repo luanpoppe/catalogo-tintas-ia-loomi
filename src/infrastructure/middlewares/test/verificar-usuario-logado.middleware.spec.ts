@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
 import { VerificarUsuarioLogadoMiddleware } from "../verificar-usuario-logado.middleware";
 
-describe("VerifyJwtMiddleware", () => {
+describe("VerificarUsuarioLogadoMiddleware", () => {
   let request: FastifyRequest;
   let reply: FastifyReply;
 
@@ -33,7 +33,7 @@ describe("VerifyJwtMiddleware", () => {
     expect(request.jwtVerify).toHaveBeenCalled();
     expect(reply.status).toHaveBeenCalledWith(401);
     expect(reply.send).toHaveBeenCalledWith({
-      message: "Acesso não autorizado.",
+      error: "Acesso não autorizado.",
     });
   });
 });
