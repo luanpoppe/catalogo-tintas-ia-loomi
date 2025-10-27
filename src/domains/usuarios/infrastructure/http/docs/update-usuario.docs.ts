@@ -1,7 +1,7 @@
 import { RouteShorthandOptions } from "fastify";
 import z from "zod";
 import {
-  RequestUsuarioDTOSchema,
+  RequestUpdateUsuarioDTOSchema,
   ResponseUsuarioDTOSchema,
 } from "../dto/usuario.dto";
 import { RecursoNaoEncontradoDocs } from "@/core/infrastructure/http/docs/recurso-nao-encontrado.docs";
@@ -14,7 +14,7 @@ export const UpdateUsuarioDocs: RouteShorthandOptions = {
     params: z.object({
       id: z.coerce.number().describe("ID do usuário"),
     }),
-    body: RequestUsuarioDTOSchema,
+    body: RequestUpdateUsuarioDTOSchema,
     response: {
       200: ResponseUsuarioDTOSchema.describe("Successo"),
       400: ErroDeValidacaoDocs,
