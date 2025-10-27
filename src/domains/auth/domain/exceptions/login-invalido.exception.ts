@@ -5,5 +5,5 @@ export class LoginInvalidoException extends BaseException {
     super("Email e/ou senha incorretos.");
   }
 
-  statusCode = 401;
+  statusCode = 400;
 }

@@ -11,7 +11,7 @@ const schema: FastifySchema = {
   body: RequestLoginDTOSchema,
   response: {
     200: ResponseLoginDTOSchema.describe("Successo"),
-    401: z.object({ error: z.string() }).describe("Login inválido"),
+    400: z.object({ error: z.string() }).describe("Login inválido"),
     500: z
       .object({
         error: z.literal("Unkown Error"),
