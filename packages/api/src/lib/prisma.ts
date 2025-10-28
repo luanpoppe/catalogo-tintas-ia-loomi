@@ -1,3 +1,3 @@
-import { PrismaClient } from "../generated/prisma/client";
+import prisma from "@catalogo-tintas/database";
 
-export const prisma = new PrismaClient();
+export { prisma };

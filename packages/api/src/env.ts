@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import z from "zod";
 import path from "node:path";
 
-const caminhoEnv = path.resolve(__dirname, "../.env");
+const caminhoEnv = path.resolve(process.cwd(), "packages/api/.env");
 config({ path: caminhoEnv });
 
 const envSchema = z.object({

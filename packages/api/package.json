@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch src/server.ts",
+    "build": "tsc -p ../../tsconfig.json --noEmit",
     "test": "vitest run --project unit",
     "test:coverage": "vitest run --project unit --coverage",
     "test:e2e": "vitest run --project e2e",
