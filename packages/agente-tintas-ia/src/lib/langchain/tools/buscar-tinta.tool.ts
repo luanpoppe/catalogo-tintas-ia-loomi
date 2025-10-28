@@ -15,29 +15,6 @@ type TintaResult = {
   ambiente: string;
 };
 
-// A. A FUNÇÃO DE BUSCA (USANDO $queryRaw)
-//    (Esta é a parte "RAG" - Retrieval-Augmented Generation)
-async function buscarTintasRelevantes(queryEmbedding: number[]) {
-  const embeddingString = `[${queryEmbedding.join(",")}]`;
-
-  // O operador '<=>' faz a "busca por similaridade" (cosine distance)
-  const resultados = await prisma.$queryRaw<TintaResult[]>`
-    SELECT 
-      nome, 
-      features, 
-      acabamento, 
-      ambiente
-    FROM "tintas"
-    ORDER BY 
-      embedding <=> ${embeddingString}::vector
-    LIMIT 3
-  `; // Pega as 3 tintas mais parecidas
-
-  return resultados;
-}
-
-// B. A FERRAMENTA (TOOL) DO LANGCHAIN
-//    (Isto é o que o Agente vai usar)
 export class BuscarTintaTool extends Tool {
   name = "buscar_tintas_suvinil";
   description =
@@ -47,7 +24,7 @@ export class BuscarTintaTool extends Tool {
     try {
       const queryVetor = await embeddings.embedQuery(input);
 
-      const tintas = await buscarTintasRelevantes(queryVetor);
+      const tintas = await this.buscarTintasRelevantes(queryVetor);
 
       if (tintas.length === 0) {
         return "Nenhuma tinta foi encontrada com essas especificações. Peça ao usuário para tentar descrever de outra forma.";
@@ -71,5 +48,26 @@ export class BuscarTintaTool extends Tool {
           }, Features: ${t.features.join(", ")})`
       )
       .join("\n");
+  }
+
+  private async buscarTintasRelevantes(
+    queryEmbedding: number[],
+    qtdResultados = 3
+  ) {
+    const embeddingString = `[${queryEmbedding.join(",")}]`;
+
+    const resultados = await prisma.$queryRaw<TintaResult[]>`
+    SELECT 
+      nome, 
+      features, 
+      acabamento, 
+      ambiente
+    FROM "tintas"
+    ORDER BY 
+      embedding <=> ${embeddingString}::vector
+    LIMIT ${qtdResultados}
+  `;
+
+    return resultados;
   }
 }
