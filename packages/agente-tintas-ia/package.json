@@ -1,6 +1,7 @@
 {
   "name": "@catalogo-tintas/agente-ia",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "scripts": {
@@ -12,7 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@catalogo-tintas/database": "file:../database",
+    "@catalogo-tintas/database": "*",
     "@langchain/core": "1.0.1",
     "@langchain/google-genai": "1.0.0",
     "@langchain/langgraph-checkpoint-postgres": "1.0.0",
@@ -22,6 +23,10 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
+    "tsdown": "0.12.9",
     "typescript": "^5.0.4"
-  }
+  },
+  "include": [
+    "src"
+  ]
 }
