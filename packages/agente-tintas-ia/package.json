@@ -1,18 +1,19 @@
 {
   "name": "@catalogo-tintas/agente-ia",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run --dir src"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@catalogo-tintas/database": "file:../database",
+    "@catalogo-tintas/database": "*",
     "@langchain/core": "1.0.1",
     "@langchain/google-genai": "1.0.0",
     "@langchain/langgraph-checkpoint-postgres": "1.0.0",
@@ -22,6 +23,12 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
-    "typescript": "^5.0.4"
-  }
+    "tsdown": "0.12.9",
+    "typescript": "^5.0.4",
+    "vitest": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  },
+  "include": [
+    "src"
+  ]
 }
