@@ -17,11 +17,21 @@ export class TintasRouter {
 
     app.get(
       "/search",
-      GetTintasByQueryDocs as any,
+      {
+        ...(GetTintasByQueryDocs as any),
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+      },
       TintasController.getByQuery
     );
 
-    app.get("/:id", GetTintaByIdDocs as any, TintasController.getById);
+    app.get(
+      "/:id",
+      {
+        ...(GetTintaByIdDocs as any),
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+      },
+      TintasController.getById
+    );
 
     app.post(
       "/",
