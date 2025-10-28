@@ -6,7 +6,7 @@ import { VerificarUsuarioLogadoMiddleware } from "@/infrastructure/middlewares/v
 export class ChatRouter {
   static async route(app: FastifyInstance) {
     app.post(
-      "/login",
+      "/",
       {
         ...(ChatDocs as any),
         preHandler: VerificarUsuarioLogadoMiddleware.middleware,

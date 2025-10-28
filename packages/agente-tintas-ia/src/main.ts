@@ -16,14 +16,14 @@ export class AgenteTintaIA {
         checkpointer,
       });
 
-      const res = await agent.invoke(
+      const fullResponse = await agent.invoke(
         {
           messages: [{ role: "user", content: input }],
         },
         { configurable: { thread_id: threadId } }
       );
 
-      return res;
+      return fullResponse.messages.at(-1)?.content;
     } catch (error: any) {
       console.error("Erro ao executar o agente de IA:", error);
       throw new Error("Falha ao processar a requisição da IA.");
@@ -32,4 +32,4 @@ export class AgenteTintaIA {
 }
 
 const agent = new AgenteTintaIA();
-agent.handle("Quero uma tinta que seja sem cheiro", "1");
+// agent.handle("Quero uma tinta que seja sem cheiro", "1");

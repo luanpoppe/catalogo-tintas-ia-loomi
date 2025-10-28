@@ -15,6 +15,7 @@ import { UsuariosRouter } from "./domains/usuarios/infrastructure/http/controlle
 import { env } from "./env";
 import { AuthRouter } from "./domains/auth/infrastructure/http/controllers/auth.router";
 import { ExceptionHandler } from "./core/exceptions/exception-handler";
+import { ChatRouter } from "./domains/chat/infrastructure/http/controllers/chat.router";
 
 const app = fastify().withTypeProvider<ZodTypeProvider>();
 
@@ -64,5 +65,7 @@ app.register(TintasRouter.route, { prefix: "/tinta" });
 app.register(UsuariosRouter.route, { prefix: "/usuario" });
 
 app.register(AuthRouter.route, { prefix: "/auth" });
+
+app.register(ChatRouter.route, { prefix: "/chat" });
 
 export { app };
