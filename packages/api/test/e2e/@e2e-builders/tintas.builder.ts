@@ -1,4 +1,6 @@
+import { app } from "@/app";
 import { RequestTintaDTO } from "@/domains/tintas/infrastructure/http/dto/tinta.dto";
+import request from "supertest";
 
 export class TintasBuilder {
   static gerarTintaRequestBody() {
@@ -13,5 +15,26 @@ export class TintasBuilder {
     };
 
     return { tintaRequestBody };
+  }
+
+  static async criarTinta({
+    accessToken,
+    cookies,
+  }: {
+    accessToken: string;
+    cookies: string[];
+  }) {
+    const { tintaRequestBody } = this.gerarTintaRequestBody();
+
+    const resposta = await request(app.server)
+      .post(`/tinta/`)
+      .set("Cookie", cookies)
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send(tintaRequestBody);
+
+    return {
+      tinta: tintaRequestBody,
+      id: resposta.body.id,
+    };
   }
 }
