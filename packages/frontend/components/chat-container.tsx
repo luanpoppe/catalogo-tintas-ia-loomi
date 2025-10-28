@@ -1,20 +1,20 @@
-"use client"
-import { useEffect, useRef } from "react"
-import { ChatMessage, type Message } from "@/components/chat-message"
-import { ScrollArea } from "@/components/ui/scroll-area"
+"use client";
+import { useEffect, useRef } from "react";
+import { ChatMessage, type Message } from "@/components/chat-message";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatContainerProps {
-  messages: Message[]
+  messages: Message[];
 }
 
 export function ChatContainer({ messages }: ChatContainerProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages])
+  }, [messages]);
 
   return (
     <ScrollArea className="flex-1 h-full" ref={scrollRef}>
@@ -38,21 +38,32 @@ export function ChatContainer({ messages }: ChatContainerProps) {
               </svg>
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold">Bem-vindo ao Assistente de Tintas!</h3>
+              <h3 className="text-xl font-semibold">
+                Bem-vindo ao Assistente de Tintas!
+              </h3>
               <p className="text-muted-foreground text-pretty max-w-md">
-                Faça perguntas sobre tintas, cores, acabamentos e receba recomendações personalizadas com imagens.
+                Faça perguntas sobre tintas, cores, acabamentos e receba
+                recomendações personalizadas com imagens.
               </p>
             </div>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">Qual a melhor tinta para parede externa?</div>
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">Mostre cores de azul para quarto</div>
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">Diferença entre tinta fosca e acetinada</div>
+              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+                Qual a melhor tinta para parede externa?
+              </div>
+              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+                Mostre cores de azul para quarto
+              </div>
+              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+                Diferença entre tinta fosca e acetinada
+              </div>
             </div>
           </div>
         ) : (
-          messages.map((message) => <ChatMessage key={message.id} message={message} />)
+          messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))
         )}
       </div>
     </ScrollArea>
-  )
+  );
 }

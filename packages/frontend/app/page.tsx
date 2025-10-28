@@ -1,25 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { isAuthenticated, setDevModeAuth } from "@/lib/auth"
-import { Button } from "@/components/ui/button"
-import { Sparkles, MessageSquare, Palette, Wrench } from "lucide-react"
-import Link from "next/link"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { isAuthenticated, setDevModeAuth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { Sparkles, MessageSquare, Palette, Wrench } from "lucide-react";
+import Link from "next/link";
+import { APP_ROUTES } from "@/lib/routes";
 
 export default function HomePage() {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push("/chat")
+      router.push(APP_ROUTES.CONVERSAR);
     }
-  }, [router])
+  }, [router]);
 
   const handleDevLogin = () => {
-    setDevModeAuth()
-    router.push("/chat")
-  }
+    setDevModeAuth();
+    router.push(APP_ROUTES.CONVERSAR);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 dark:from-purple-950/20 dark:via-background dark:to-purple-950/20">
@@ -27,20 +28,28 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Sparkles className="h-12 w-12 text-primary" />
-            <h1 className="text-5xl font-bold text-balance">Catálogo Inteligente de Tintas</h1>
+            <h1 className="text-5xl font-bold text-balance">
+              Catálogo Inteligente de Tintas
+            </h1>
           </div>
 
           <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto leading-relaxed">
-            Descubra a tinta perfeita para seu projeto com a ajuda da inteligência artificial. Converse com nosso
-            assistente e receba recomendações personalizadas.
+            Descubra a tinta perfeita para seu projeto com a ajuda da
+            inteligência artificial. Converse com nosso assistente e receba
+            recomendações personalizadas.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
             <Button asChild size="lg" className="text-lg px-8">
-              <Link href="/signup">Começar Agora</Link>
+              <Link href={APP_ROUTES.CADASTRAR}>Começar Agora</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 bg-transparent">
-              <Link href="/login">Entrar</Link>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 bg-transparent"
+            >
+              <Link href={APP_ROUTES.ENTRAR}>Entrar</Link>
             </Button>
           </div>
 
@@ -87,5 +96,5 @@ export default function HomePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
