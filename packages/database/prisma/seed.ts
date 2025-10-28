@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { PrismaClient, Tintas } from "../generated/prisma/client";
+import { PrismaClient, Tintas } from "../generated/prisma/client.js";
 import { OpenAIEmbeddings } from "@langchain/openai";
 // TODO: Se preferir ler de CSV, substitua o array abaixo pela leitura do arquivo.
 
@@ -60,10 +60,10 @@ async function main() {
     const escape = (s: string) => String(s).replace(/'/g, "''");
     // Monta literais de array sem aspas externas (ex: {ALVENARIA})
     const tiposLiteral = `{${tinta.tiposDeSuperfeicie
-      .map((v) => escape(v))
+      .map((v: string) => escape(v))
       .join(",")}}`;
     const featuresLiteral = `{${tinta.features
-      .map((v) => escape(v))
+      .map((v: string) => escape(v))
       .join(",")}}`;
 
     const sql = `

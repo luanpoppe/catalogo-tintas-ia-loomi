@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { prisma } from "@/lib/prisma";
+import prisma from "../../index.js";
 import { execSync } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
@@ -16,7 +16,7 @@ function generateDatabaseUrl(schema: string) {
 
 export default <Environment>{
   name: "prisma",
-  transformMode: "ssr",
+  viteEnvironment: "node",
   async setup() {
     const schema = randomUUID();
     const databaseUrl = generateDatabaseUrl(schema);

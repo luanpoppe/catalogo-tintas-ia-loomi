@@ -1,5 +1,9 @@
 import { defineConfig } from "prisma/config";
-import "dotenv/config";
+import { config } from "dotenv";
+import path from "node:path";
+
+const caminho = path.resolve(__dirname, "./.env");
+config({ path: caminho });
 
 const databaseUrl = process.env.DATABASE_URL;
 
