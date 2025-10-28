@@ -10,7 +10,7 @@ export class AgenteTintaIA {
     shouldEraseMemory: boolean = false
   ) {
     const model = Langchain.models.openAI();
-    const tools = [new BuscarTintaTool()];
+    const tools = [BuscarTintaTool.tool()];
     const checkpointer = await ShortTermMemory.checkpointer();
 
     try {
@@ -20,7 +20,8 @@ export class AgenteTintaIA {
         checkpointer,
       });
 
-      if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
+      // if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
+      await checkpointer.deleteThread(threadId);
 
       const fullResponse = await agent.invoke(
         {

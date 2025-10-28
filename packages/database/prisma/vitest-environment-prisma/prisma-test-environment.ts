@@ -11,6 +11,7 @@ function generateDatabaseUrl(schema: string) {
     throw new Error("Please provide a DATABASE_URL env variable");
   const url = new URL(process.env.DATABASE_URL);
   url.searchParams.set("schema", schema);
+  // url.searchParams.set("search_path", `${schema},public`);
   return url.toString();
 }
 
@@ -30,14 +31,10 @@ export default <Environment>{
 
     const packagesFolder = path.resolve(__dirname, "../../..");
 
-    console.log({ packagesFolder });
-
     const schemaPath = path.resolve(
       packagesFolder,
       "./database/prisma/schema.prisma"
     );
-
-    console.log({ schemaPath });
 
     if (!fs.existsSync(schemaPath))
       throw new Error(`Prisma schema not found at: ${schemaPath}`);
@@ -45,6 +42,20 @@ export default <Environment>{
     execSync(`npx prisma migrate deploy --schema="${schemaPath}"`, {
       stdio: "inherit",
     });
+
+    // INSTALAR A EXTENSÃO VECTOR NO SCHEMA DE TESTE
+    try {
+      await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS vector`;
+      console.log("Extensão vector instalada com sucesso no schema de teste");
+
+      // Garantir que o search_path inclua o schema de teste e o schema public,
+      // assim os tipos/operators da extensão pgvector (instalados em public)
+      // ficam disponíveis durante os testes.
+      await prisma.$executeRawUnsafe(`SET search_path = "${schema}", public`);
+    } catch (error) {
+      console.error("Erro ao instalar extensão vector:", error);
+      throw error;
+    }
 
     return {
       async teardown() {
