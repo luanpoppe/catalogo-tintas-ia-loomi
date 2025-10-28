@@ -7,7 +7,7 @@ export const DeleteTintaDocs: RouteShorthandOptions = {
     tags: ["tintas"],
     description: "Deletar uma tinta pelo ID.",
     params: z.object({
-      id: z.number().int().positive().describe("ID da tinta"),
+      id: z.coerce.number().int().positive().describe("ID da tinta"),
     }),
     response: {
       204: z.void().describe("No Content"),

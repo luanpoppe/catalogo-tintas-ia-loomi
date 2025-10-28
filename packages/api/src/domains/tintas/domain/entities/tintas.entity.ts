@@ -17,7 +17,7 @@ export const TIPOS_DE_SUPERFICIE_SCHEMA = z.enum([
 ]);
 
 export const TintaSchema = z.object({
-  id: z.number().int().positive().optional(),
+  id: z.coerce.number().int().positive().optional(),
   nome: z.string().min(1, "O nome da tinta é obrigatório."),
   cor: z.string().min(1, "A cor é obrigatória."),
   ambiente: AMBIENTES_SCHEMA,

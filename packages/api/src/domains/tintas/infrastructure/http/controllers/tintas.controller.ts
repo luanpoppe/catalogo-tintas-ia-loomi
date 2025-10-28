@@ -74,7 +74,7 @@ export class TintasController {
     const useCase = new DeleteTintaUseCase(tintaRepository);
 
     const { id } = request.params;
-    await useCase.execute(id);
+    await useCase.execute(Number(id));
 
     return reply.status(204).send();
   }
