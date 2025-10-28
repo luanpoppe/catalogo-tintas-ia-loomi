@@ -16,7 +16,8 @@ function generateDatabaseUrl(schema: string) {
 
 export default <Environment>{
   name: "prisma",
-  viteEnvironment: "node",
+  viteEnvironment: "ssr",
+
   async setup() {
     const schema = randomUUID();
     const databaseUrl = generateDatabaseUrl(schema);
@@ -27,7 +28,9 @@ export default <Environment>{
     env.JWT_SECRET = env.JWT_SECRET ?? "test_jwt_secret";
     env.OPENAI_API_KEY = env.OPENAI_API_KEY ?? "test_openai_key";
 
-    const packagesFolder = path.resolve(__dirname, "../../../..");
+    const packagesFolder = path.resolve(__dirname, "../../..");
+
+    console.log({ packagesFolder });
 
     const schemaPath = path.resolve(
       packagesFolder,

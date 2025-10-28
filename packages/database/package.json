@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "prisma": "6.18.0",
+    "tsdown": "0.12.9",
     "typescript": "^5.0.4"
   },
   "prisma": {
