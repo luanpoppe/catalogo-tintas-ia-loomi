@@ -4,6 +4,11 @@ import tsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [tsConfigPaths()],
   test: {
+    server: {
+      deps: {
+        external: [/\/packages\/database\//],
+      },
+    },
     dir: "./",
     globals: true,
     projects: [
@@ -20,7 +25,7 @@ export default defineConfig({
           name: "e2e",
           dir: "test/e2e/",
           environment:
-            "./prisma/vitest-environment-prisma/prisma-test-environment.ts",
+            "../database/prisma/vitest-environment-prisma/prisma-test-environment.ts",
         },
       },
     ],

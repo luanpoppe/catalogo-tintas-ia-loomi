@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@catalogo-tintas/database": "file:../database",
     "@langchain/core": "1.0.1",
     "@langchain/google-genai": "1.0.0",
     "@langchain/langgraph-checkpoint-postgres": "1.0.0",

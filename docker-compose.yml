@@ -1,6 +1,6 @@
 services:
   catalogo-tintas-pg:
-    image: postgres
+    image: pgvector/pgvector:pg16
     ports:
       - 5432:5432
     environment:

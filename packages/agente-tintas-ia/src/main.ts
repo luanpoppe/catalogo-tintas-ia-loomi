@@ -1,24 +1,35 @@
+import { createAgent } from "langchain";
 import { Langchain } from "./lib/langchain/langchain";
+import { BuscarTintaTool } from "./lib/langchain/tools/buscar-tinta.tool";
+import { ShortTermMemory } from "./lib/langchain/short-term-memory";
 
 export class AgenteTintaIA {
-  async log() {
-    console.log("Executou agenda de IA com sucesso");
+  async handle(input: string, threadId: string) {
+    const model = Langchain.models.openAI();
+    const tools = [new BuscarTintaTool()];
+    const checkpointer = await ShortTermMemory.checkpointer();
 
-    // const model = Langchain.models.gemini();
+    try {
+      const agent = createAgent({
+        model,
+        tools,
+        checkpointer,
+      });
 
-    // try {
-    //   const agent = await Langchain.createAgent({ model });
-    //   const res = await agent.invoke(
-    //     {
-    //       messages: [{ role: "user", content: (req.body as any).content }],
-    //     },
-    //     { configurable: { thread_id: "1" } }
-    //   );
+      const res = await agent.invoke(
+        {
+          messages: [{ role: "user", content: input }],
+        },
+        { configurable: { thread_id: threadId } }
+      );
 
-    // return reply.status(200).send({ msg: "Hello", res });
-    // } catch (error: any) {
-    //   console.error(error);
-    //   throw new Error();
-    // }
+      return res;
+    } catch (error: any) {
+      console.error("Erro ao executar o agente de IA:", error);
+      throw new Error("Falha ao processar a requisição da IA.");
+    }
   }
 }
+
+const agent = new AgenteTintaIA();
+agent.handle("Quero uma tinta que seja sem cheiro", "1");

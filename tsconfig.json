@@ -15,9 +15,16 @@
     "types": ["node", "vitest/globals"],
     // and npm install -D @types/node
 
-    "baseUrl": "./packages/api",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "packages/api/src/*",
+        "packages/database/src/*",
+        "packages/agente-tintas-ia/src/*"
+      ],
+      "@api/*": ["packages/api/src/*"],
+      "@database/*": ["packages/database/src/*"],
+      "@agente-tintas-ia/*": ["packages/agente-tintas-ia/src/*"]
     },
 
     // Other Outputs
