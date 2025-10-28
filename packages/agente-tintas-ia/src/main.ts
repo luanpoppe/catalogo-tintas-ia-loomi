@@ -9,7 +9,7 @@ export class AgenteTintaIA {
     threadId: string,
     shouldEraseMemory: boolean = false
   ) {
-    const model = Langchain.models.openAI();
+    const model = Langchain.models.gemini();
     const tools = [BuscarTintaTool.tool()];
     const checkpointer = await ShortTermMemory.checkpointer();
 
