@@ -4,7 +4,11 @@ import { BuscarTintaTool } from "./lib/langchain/tools/buscar-tinta.tool";
 import { ShortTermMemory } from "./lib/langchain/short-term-memory";
 
 export class AgenteTintaIA {
-  async handle(input: string, threadId: string) {
+  async handle(
+    input: string,
+    threadId: string,
+    shouldEraseMemory: boolean = false
+  ) {
     const model = Langchain.models.openAI();
     const tools = [new BuscarTintaTool()];
     const checkpointer = await ShortTermMemory.checkpointer();
@@ -15,6 +19,8 @@ export class AgenteTintaIA {
         tools,
         checkpointer,
       });
+
+      if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
 
       const fullResponse = await agent.invoke(
         {

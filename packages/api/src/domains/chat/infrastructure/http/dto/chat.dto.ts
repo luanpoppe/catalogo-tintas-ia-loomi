@@ -2,6 +2,7 @@ import z from "zod";
 
 export const RequestChatDTOSchema = z.object({
   userMessage: z.string().nonempty().nonoptional(),
+  shouldEraseMemory: z.boolean().default(false),
 });
 
 export type RequestChatDTO = z.infer<typeof RequestChatDTOSchema>;

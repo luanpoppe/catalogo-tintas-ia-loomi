@@ -28,30 +28,22 @@ describe("ChatUseCase", () => {
 
   it("deve retornar uma resposta do agente de IA", async () => {
     const userMessage = "Olá, qual tinta devo usar?";
+    const userId = 1;
+    const shouldEraseMemory = false;
     const expectedResponse = "Você deve usar tinta acrílica.";
 
-    // Configura o mock para retornar um valor específico
-    (agenteTintaIAMock.handle as ReturnType<typeof vi.fn>).mockResolvedValue(
-      expectedResponse
+    agenteTintaIAMock.handle.mockResolvedValue(expectedResponse);
+
+    const result = await chatUseCase.execute(
+      { userMessage, shouldEraseMemory },
+      userId
     );
 
-    const result = await chatUseCase.execute({ userMessage });
-
-    expect(agenteTintaIAMock.handle).toHaveBeenCalledWith(userMessage, "2");
-    expect(result).toEqual({ response: expectedResponse });
-  });
-
-  it("deve lidar com uma mensagem de usuário vazia", async () => {
-    const userMessage = "";
-    const expectedResponse = "Por favor, forneça uma mensagem.";
-
-    (agenteTintaIAMock.handle as ReturnType<typeof vi.fn>).mockResolvedValue(
-      expectedResponse
+    expect(agenteTintaIAMock.handle).toHaveBeenCalledWith(
+      userMessage,
+      userId.toString(),
+      shouldEraseMemory
     );
-
-    const result = await chatUseCase.execute({ userMessage });
-
-    expect(agenteTintaIAMock.handle).toHaveBeenCalledWith(userMessage, "2");
     expect(result).toEqual({ response: expectedResponse });
   });
 
@@ -59,13 +51,18 @@ describe("ChatUseCase", () => {
     const userMessage = "Mensagem que causa erro";
     const errorMessage = "Erro ao processar a mensagem.";
 
-    (agenteTintaIAMock.handle as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error(errorMessage)
-    );
+    const userId = 1;
+    const shouldEraseMemory = false;
 
-    await expect(chatUseCase.execute({ userMessage })).rejects.toThrow(
-      errorMessage
+    agenteTintaIAMock.handle.mockRejectedValue(new Error(errorMessage));
+
+    await expect(
+      chatUseCase.execute({ userMessage, shouldEraseMemory }, userId)
+    ).rejects.toThrow(errorMessage);
+    expect(agenteTintaIAMock.handle).toHaveBeenCalledWith(
+      userMessage,
+      userId.toString(),
+      shouldEraseMemory
     );
-    expect(agenteTintaIAMock.handle).toHaveBeenCalledWith(userMessage, "2");
   });
 });

@@ -12,8 +12,9 @@ export class ChatController {
     reply: FastifyReply
   ) {
     const useCase = new ChatUseCase();
+    const userId = req.user.sub;
 
-    const { response } = await useCase.execute(req.body);
+    const { response } = await useCase.execute(req.body, userId);
 
     return reply.status(200).send({ aiMessage: response });
   }
