@@ -15,7 +15,7 @@ export class TintaRepository implements ITintaRepository {
   }
 
   async findById(id: number): Promise<TintaEntity | null> {
-    const tinta = await prisma.tintas.findUniqueOrThrow({
+    const tinta = await prisma.tintas.findUnique({
       where: { id },
     });
     return tinta;
