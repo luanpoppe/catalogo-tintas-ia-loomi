@@ -30,8 +30,3 @@ export class AgenteTintaIA {
     }
   }
 }
-
-export const abc = "123";
-
-const agent = new AgenteTintaIA();
-// agent.handle("Quero uma tinta que seja sem cheiro", "1");
