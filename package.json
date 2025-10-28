@@ -9,7 +9,8 @@
   "scripts": {
     "start:api": "npm run start -w api",
     "test": "npm run test -ws",
-    "test:coverage": "npm run test:coverage -ws"
+    "test:coverage": "npm run test:coverage -ws",
+    "front": "npm run dev -w @catalogo-tintas/frontend"
   },
   "keywords": [],
   "author": "",
