@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { getAccessToken, setTokens, clearTokens } from "./auth";
 import { toast } from "@/hooks/use-toast";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
 
 interface ApiRequestOptions extends AxiosRequestConfig {
   requiresAuth?: boolean;
@@ -132,11 +132,16 @@ async function performRequest<T = any>(config: AxiosRequestConfig): Promise<T> {
   return response.data;
 }
 
+interface ChatResponse {
+  aiMessage: string;
+  urlImagem?: string;
+}
+
 export async function sendChatMessage(
   userMessage: string,
   shouldEraseMemory: boolean = false
-): Promise<any> {
-  return apiRequest("/chat", {
+): Promise<ChatResponse> {
+  return apiRequest<ChatResponse>("/chat", {
     method: "POST",
     data: { userMessage, shouldEraseMemory },
   });

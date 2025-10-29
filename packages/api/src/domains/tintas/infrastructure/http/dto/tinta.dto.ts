@@ -2,7 +2,9 @@ import z from "zod";
 import { TintaSchema } from "../../../domain/entities/tintas.entity";
 import { TintasUpdateInput } from "../../../../../generated/prisma/models";
 
-export const RequestTintaDTOSchema = TintaSchema;
+export const RequestTintaDTOSchema = TintaSchema.omit({
+  id: true,
+});
 
 export type RequestTintaDTO = z.infer<typeof RequestTintaDTOSchema>;
 

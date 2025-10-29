@@ -11,8 +11,6 @@ import { VerificarPermissaoDoUsuarioMiddleware } from "@/infrastructure/middlewa
 
 export class TintasRouter {
   static async route(app: FastifyInstance) {
-    app.addHook("preHandler", VerificarUsuarioLogadoMiddleware.middleware);
-
     app.get("/", GetAllTintasDocs as any, TintasController.getAll);
 
     app.get(

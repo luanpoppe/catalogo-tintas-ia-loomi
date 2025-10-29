@@ -5,7 +5,15 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "oaidaileapiprodscus.blob.core.windows.net",
+        port: "",
+        pathname: "/private/**",
+      },
+    ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

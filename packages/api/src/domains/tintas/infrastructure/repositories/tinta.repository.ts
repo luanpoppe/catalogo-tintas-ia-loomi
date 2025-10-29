@@ -10,7 +10,9 @@ import { TintaQueryMapper } from "../mappers/tinta-query.mapper";
 
 export class TintaRepository implements ITintaRepository {
   async findAll(): Promise<TintaEntity[]> {
-    const tintas = await prisma.tintas.findMany();
+    const tintas = await prisma.tintas.findMany({
+      take: 50,
+    });
     return tintas;
   }
 

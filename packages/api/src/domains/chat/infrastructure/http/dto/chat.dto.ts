@@ -9,6 +9,7 @@ export type RequestChatDTO = z.infer<typeof RequestChatDTOSchema>;
 
 export const ResponseChatDTOSchema = z.object({
   aiMessage: z.string(),
+  urlImagem: z.optional(z.string()),
 });
 
 export type ResponseChatDTO = z.infer<typeof ResponseChatDTOSchema>;

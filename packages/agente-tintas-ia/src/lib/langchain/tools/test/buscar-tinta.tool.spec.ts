@@ -8,6 +8,7 @@ import { vi, describe, it, expect, beforeEach, Mocked } from "vitest";
 vi.mock("@catalogo-tintas/database", () => ({
   default: {
     $queryRaw: vi.fn(),
+    $executeRawUnsafe: vi.fn(),
   },
 }));
 
@@ -28,35 +29,36 @@ vi.mock("../../../../env", () => ({
 }));
 
 describe("BuscarTintaTool", () => {
-  let buscarTintaTool: BuscarTintaTool;
   let mockPrismaQueryRaw: Mocked<any>;
+  let mockPrismaExecuteRawUnsafe: Mocked<any>;
   let mockEmbedQueryFn: Mocked<any>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    buscarTintaTool = new BuscarTintaTool();
     mockPrismaQueryRaw = prisma.$queryRaw as Mocked<any>;
+    mockPrismaExecuteRawUnsafe = prisma.$executeRawUnsafe as Mocked<any>;
 
     const openAIEmbeddingsInstance = new OpenAIEmbeddings({});
     mockEmbedQueryFn = openAIEmbeddingsInstance.embedQuery as Mocked<any>;
 
     mockEmbedQueryFn.mockResolvedValue([0.1, 0.2, 0.3]);
     mockPrismaQueryRaw.mockResolvedValue([]); // Por padrão, nenhuma tinta encontrada
+    mockPrismaExecuteRawUnsafe.mockResolvedValue(undefined); // Mock para $executeRawUnsafe
   });
 
   it("deve ter o nome e a descrição corretos", () => {
-    expect(buscarTintaTool.name).toBe("buscar_tintas_suvinil");
-    expect(buscarTintaTool.description).toBe(
+    expect(BuscarTintaTool.name).toBe("buscar_tintas_suvinil");
+    expect(BuscarTintaTool.description).toBe(
       'Use esta ferramenta para encontrar tintas Suvinil com base nas necessidades, contexto ou preferências do usuário. A entrada deve ser uma descrição do que o usuário procura (ex: "tinta para quarto sem cheiro", "tinta para muro externo que pega chuva").'
     );
   });
 
-  describe("_call", () => {
+  describe("call", () => {
     it("deve retornar uma mensagem de 'nenhuma tinta encontrada' se a busca retornar vazia", async () => {
       const input = "tinta para parede";
       mockPrismaQueryRaw.mockResolvedValue([]);
 
-      const result = await (buscarTintaTool as any)._call(input);
+      const result = await BuscarTintaTool.call(input);
 
       expect(mockEmbedQueryFn).toHaveBeenCalledWith(input);
       expect(mockPrismaQueryRaw).toHaveBeenCalled();
@@ -77,7 +79,7 @@ describe("BuscarTintaTool", () => {
       ];
       mockPrismaQueryRaw.mockResolvedValue(mockTintas);
 
-      const result = await (buscarTintaTool as any)._call(input);
+      const result = await BuscarTintaTool.call(input);
 
       expect(mockEmbedQueryFn).toHaveBeenCalledWith(input);
       expect(mockPrismaQueryRaw).toHaveBeenCalled();
@@ -96,7 +98,7 @@ describe("BuscarTintaTool", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      const result = await (buscarTintaTool as any)._call(input);
+      const result = await BuscarTintaTool.call(input);
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Erro ao buscar tintas:",
@@ -129,14 +131,13 @@ describe("BuscarTintaTool", () => {
         "- Tinta: Tinta A (Acabamento: brilhante, Ambiente: externo, Features: feature1, feature2)\n" +
         "- Tinta: Tinta B (Acabamento: acetinado, Ambiente: interno, Features: feature3)";
 
-      // Acessar o método privado usando colchetes para teste
-      const formatted = (buscarTintaTool as any).formatarResultado(tintas);
+      const formatted = (BuscarTintaTool as any).formatarResultado(tintas);
       expect(formatted).toBe(expected);
     });
 
     it("deve retornar uma string vazia para uma lista de tintas vazia", () => {
       const tintas: any[] = [];
-      const formatted = (buscarTintaTool as any).formatarResultado(tintas);
+      const formatted = (BuscarTintaTool as any).formatarResultado(tintas);
       expect(formatted).toBe("");
     });
   });
@@ -147,11 +148,14 @@ describe("BuscarTintaTool", () => {
       const qtdResultados = 2;
       const expectedEmbeddingString = `[${queryEmbedding.join(",")}]`;
 
-      await (buscarTintaTool as any).buscarTintasRelevantes(
+      await (BuscarTintaTool as any).buscarTintasRelevantes(
         queryEmbedding,
         qtdResultados
       );
 
+      expect(mockPrismaExecuteRawUnsafe).toHaveBeenCalledWith(
+        "SET search_path = public"
+      );
       expect(mockPrismaQueryRaw).toHaveBeenCalledWith(
         expect.any(Object), // Template string literal
         expectedEmbeddingString,

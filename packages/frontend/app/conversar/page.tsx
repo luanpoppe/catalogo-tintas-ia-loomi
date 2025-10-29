@@ -126,7 +126,7 @@ export default function ChatPage() {
             id: (Date.now() + 2).toString(),
             role: "assistant",
             content: response.aiMessage,
-            imageUrl: response.imageUrl,
+            imageUrl: response.urlImagem,
             timestamp: new Date(),
           })
       );
