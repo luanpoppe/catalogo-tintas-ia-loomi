@@ -1,10 +1,13 @@
-import "dotenv/config";
+import { config } from "dotenv";
 import prisma from "../../index.js";
 import { execSync } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
 import { randomUUID } from "node:crypto";
 import { Environment } from "vitest/environments";
+
+const caminhoEnv = path.resolve(__dirname, "../../.env");
+config({ path: caminhoEnv });
 
 function generateDatabaseUrl(schema: string) {
   if (!process.env.DATABASE_URL)

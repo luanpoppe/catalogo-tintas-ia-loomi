@@ -11,7 +11,7 @@ export class ExceptionHandler {
     const isProd = env.NODE_ENV === "prod";
 
     if (isResponseSerializationError(error)) {
-      const message = isProd ? "Unknow Error" : error;
+      const message = isProd ? "Unknow Error" : error.message;
 
       return reply.status(500).send({ error: message });
     }

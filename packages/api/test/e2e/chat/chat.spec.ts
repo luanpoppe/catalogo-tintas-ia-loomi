@@ -2,7 +2,6 @@ import request from "supertest";
 import { app } from "@/app";
 import { UsuariosBuilder } from "../@e2e-builders/usuarios.builder";
 import { RequestChatDTO } from "@/domains/chat/infrastructure/http/dto/chat.dto";
-import { AgenteTintaIA } from "@catalogo-tintas/agente-ia";
 
 describe("Chat", () => {
   beforeAll(async () => {
@@ -36,19 +35,4 @@ describe("Chat", () => {
     expect(resposta.statusCode).toEqual(200);
     expect(resposta.body).toEqual({ aiMessage: expect.any(String) });
   });
-
-  // it("usuário comum não deve poder criar uma tinta", async () => {
-  //   const { accessToken, cookies } =
-  //     await UsuariosBuilder.criarUsuarioComum();
-  //   const { tintaRequestBody } = TintasBuilder.gerarTintaRequestBody();
-
-  //   const resposta = await request(app.server)
-  //     .post("/tinta")
-  //     .set("Cookie", cookies)
-  //     .set("Authorization", `Bearer ${accessToken}`)
-  //     .send(tintaRequestBody);
-
-  //   expect(resposta.statusCode).toEqual(403);
-  //   expect(resposta.body).toEqual({ error: expect.any(String) });
-  // });
 }, 20000);

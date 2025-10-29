@@ -12,13 +12,15 @@
     }
   },
   "scripts": {
-    "build": "prisma generate && tsc && node scripts/copy-generated.cjs",
+    "build": "prisma generate && tsc && node scripts/copy-generated.cjs && npx tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "6.18.0",
+    "bcryptjs": "3.0.2",
+    "csv-parser": "3.2.0",
     "dotenv": "17.2.3"
   },
   "devDependencies": {
