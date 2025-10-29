@@ -6,6 +6,7 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string().nonempty(),
   DATABASE_URL: z.string().nonempty(),
   OPENAI_API_KEY: z.string().nonempty(),
+  TAVILY_API_KEY: z.string().nonempty(),
 });
 
 const result = envSchema.safeParse(process.env);

@@ -18,6 +18,7 @@ export class ChatController {
       const { response } = await useCase.execute(req.body, userId);
       return reply.status(200).send({ aiMessage: response });
     } catch (error) {
+      console.error({ error });
       return reply.status(200).send({
         aiMessage:
           "Erro durante o processamento da mensagem pelo agente de IA. Tente novamente.",

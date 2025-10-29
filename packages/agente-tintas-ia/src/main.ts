@@ -4,6 +4,7 @@ import { BuscarTintaTool } from "./lib/langchain/tools/buscar-tinta.tool";
 import { ShortTermMemory } from "./lib/langchain/short-term-memory";
 import { ListarTodasTintasTool } from "./lib/langchain/tools/listar-todas-tintas.tool";
 import { BuscarTintasPorQueryTool } from "./lib/langchain/tools/buscar-tintas-por-query.tool";
+import { BuscarInternetTool } from "./lib/langchain/tools/buscar-internet.tool";
 
 export class AgenteTintaIA {
   async handle(
@@ -16,6 +17,7 @@ export class AgenteTintaIA {
       BuscarTintaTool.tool(),
       ListarTodasTintasTool.tool(),
       BuscarTintasPorQueryTool.tool(),
+      BuscarInternetTool.tool(),
     ];
     const checkpointer = await ShortTermMemory.checkpointer();
 
