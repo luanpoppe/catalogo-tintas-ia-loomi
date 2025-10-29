@@ -1,0 +1,27 @@
+# Use a imagem oficial do Node.js como base
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Adiciona o diretório node_modules/.bin ao PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# COPY package*.json ./
+
+COPY packages/frontend/package*.json ./packages/frontend/
+# COPY packages/api/package*.json ./packages/api/
+# COPY packages/agente-tintas-ia/package*.json ./packages/agente-tintas-ia/
+# COPY packages/database/package*.json ./packages/database/
+
+
+
+COPY packages/frontend/. ./packages/frontend/
+
+WORKDIR /app/packages/frontend/
+
+RUN npm install --legacy-peer-deps
+
+EXPOSE 3000
+
+
+CMD ["npm", "run", "dev:docker"]
