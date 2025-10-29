@@ -11,16 +11,11 @@ import { BCryptJS } from "@/lib/encrypt/bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import request from "supertest";
+import { faker } from "@faker-js/faker";
 
 export class UsuariosBuilder {
-  static gerarEmailUnico() {
-    return `teste-${Date.now()}-${Math.random()
-      .toString(36)
-      .substring(2, 7)}@gmail.com`;
-  }
-
   static async criarUsuarioComum() {
-    const email = UsuariosBuilder.gerarEmailUnico();
+    const email = faker.internet.email();
     const senha = "Senha123abc";
 
     const requestBody: RequestUsuarioDTO = {
@@ -47,7 +42,7 @@ export class UsuariosBuilder {
 
     const admin = await prisma.usuarios.create({
       data: {
-        email: UsuariosBuilder.gerarEmailUnico(),
+        email: faker.internet.email(),
         nome: "Usuario Admin",
         tipoUsuario: "ADMIN",
         passwordHash: senhaHashed,
