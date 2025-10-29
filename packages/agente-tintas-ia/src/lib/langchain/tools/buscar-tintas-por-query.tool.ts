@@ -2,13 +2,21 @@ import { tool } from "@langchain/core/tools";
 import z from "zod";
 
 // Definindo os schemas para os enums, conforme encontrados em tintas.entity.ts
-const AMBIENTES_SCHEMA = z.enum(["INTERNO", "EXTERNO", "INTERNO_EXTERNO"]);
+export const AMBIENTES_SCHEMA = z.enum([
+  "INTERNO",
+  "EXTERNO",
+  "INTERNO_EXTERNO",
+]);
 
 const ACABAMENTOS_SCHEMA = z.enum(["ACETINADO", "FOSCO", "BRILHANTE"]);
 
 const LINHAS_SCHEMA = z.enum(["PREMIUM", "STANDARD"]);
 
-const TIPOS_DE_SUPERFICIE_SCHEMA = z.enum(["ALVENARIA", "MADEIRA", "FERRO"]);
+export const TIPOS_DE_SUPERFICIE_SCHEMA = z.enum([
+  "ALVENARIA",
+  "MADEIRA",
+  "FERRO",
+]);
 
 // Definindo o schema da query para a ferramenta
 const TintaQuerySchema = z
