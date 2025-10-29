@@ -4,7 +4,7 @@ const path = require("path");
 
 const packageRoot = path.resolve(__dirname, "..");
 const src = path.join(packageRoot, "generated");
-const destSrc = path.join(packageRoot, "src", "generated");
+const destSrc = path.join(packageRoot, "../", "api", "src", "generated");
 const destDist = path.join(packageRoot, "dist", "generated");
 
 try {
