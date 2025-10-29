@@ -41,6 +41,15 @@ app.register(fastifySwagger, {
       title: "Catálogo Inteligente de Tintas - Desafio Loomi",
       version: "1.0.0",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   transform: jsonSchemaTransform,
 });
