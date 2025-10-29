@@ -10,6 +10,7 @@ export const CreateTintaDocs: RouteShorthandOptions = {
   schema: {
     tags: ["tintas"],
     description: "Criar uma tinta.",
+    security: [{ bearerAuth: [] }],
     body: RequestTintaDTOSchema,
     response: {
       200: ResponseTintaDTOSchema.describe("Successo"),

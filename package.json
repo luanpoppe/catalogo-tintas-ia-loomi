@@ -7,10 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "start:api": "npm run start -w api",
+    "api": "npm run start -w api",
+    "front": "npm run dev -w @catalogo-tintas/frontend",
+    "build": "npm run build -ws",
+    "db:migrate": "npm run build -w packages/database",
     "test": "npm run test -ws",
-    "test:coverage": "npm run test:coverage -ws",
-    "front": "npm run dev -w @catalogo-tintas/frontend"
+    "test:e2e": "npm run test:e2e -w packages/api",
+    "test:coverage": "npm run test:coverage -ws"
   },
   "keywords": [],
   "author": "",

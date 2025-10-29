@@ -11,6 +11,7 @@ export const UpdateUsuarioDocs: RouteShorthandOptions = {
   schema: {
     tags: ["usuarios"],
     description: "Atualizar um usuário pelo ID.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       id: z.coerce.number().describe("ID do usuário"),
     }),

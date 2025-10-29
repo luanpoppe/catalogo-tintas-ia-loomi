@@ -7,6 +7,7 @@ export const GetUsuarioByEmailDocs: RouteShorthandOptions = {
   schema: {
     tags: ["usuarios"],
     description: "Buscar um usuário pelo email.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       email: z.email().describe("Email do usuário"),
     }),

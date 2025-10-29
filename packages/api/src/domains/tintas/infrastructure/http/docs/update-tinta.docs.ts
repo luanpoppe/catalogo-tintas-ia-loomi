@@ -11,6 +11,7 @@ export const UpdateTintaDocs: RouteShorthandOptions = {
   schema: {
     tags: ["tintas"],
     description: "Atualizar uma tinta existente.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       id: z.coerce.number().int().positive().describe("ID da tinta"),
     }),
