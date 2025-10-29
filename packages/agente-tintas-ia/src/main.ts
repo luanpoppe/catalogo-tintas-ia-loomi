@@ -2,6 +2,7 @@ import { createAgent } from "langchain";
 import { Langchain } from "./lib/langchain/langchain";
 import { BuscarTintaTool } from "./lib/langchain/tools/buscar-tinta.tool";
 import { ShortTermMemory } from "./lib/langchain/short-term-memory";
+import { ListarTodasTintasTool } from "./lib/langchain/tools/listar-todas-tintas.tool";
 
 export class AgenteTintaIA {
   async handle(
@@ -10,7 +11,7 @@ export class AgenteTintaIA {
     shouldEraseMemory: boolean = false
   ) {
     const model = Langchain.models.gemini();
-    const tools = [BuscarTintaTool.tool()];
+    const tools = [BuscarTintaTool.tool(), ListarTodasTintasTool.tool()];
     const checkpointer = await ShortTermMemory.checkpointer();
 
     try {
