@@ -1,5 +1,9 @@
-import "dotenv/config";
 import z from "zod";
+import path from "node:path";
+import { config } from "dotenv";
+
+const caminhoEnv = path.resolve(__dirname, "../.env");
+config({ path: caminhoEnv });
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["dev", "prod", "test"]),
