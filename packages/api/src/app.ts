@@ -56,7 +56,7 @@ app.register(fastifyJwt, {
     signed: false,
   },
   sign: {
-    expiresIn: env.NODE_ENV === "dev" ? "1m" : "10m",
+    expiresIn: env.NODE_ENV === "dev" ? "180m" : "10m",
   },
 });
 
