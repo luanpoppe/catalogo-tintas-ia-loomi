@@ -11,6 +11,9 @@ npm run build --workspace=packages/agente-tintas-ia
 echo "ENTRYPOINT: Construindo workspace 'database'..."
 npm run build --workspace=packages/database
 
+echo "ENTRYPOINT: Aplicando migrações do Prisma..."
+npx prisma migrate deploy --schema=packages/database/prisma/schema.prisma
+
 echo "ENTRYPOINT: Iniciando a API em modo de desenvolvimento (watch)..."
 # 'exec' é importante aqui: ele substitui o processo do script
 # pelo processo do 'npm', permitindo que o contêiner receba
