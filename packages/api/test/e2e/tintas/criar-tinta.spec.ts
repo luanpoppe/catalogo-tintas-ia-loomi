@@ -38,8 +38,7 @@ describe("Criar usuário", () => {
   });
 
   it("usuário comum não deve poder criar uma tinta", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
     const { tintaRequestBody } = TintasBuilder.gerarTintaRequestBody();
 
     const resposta = await request(app.server)

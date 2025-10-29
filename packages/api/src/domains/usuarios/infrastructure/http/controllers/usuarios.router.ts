@@ -39,7 +39,7 @@ export class UsuariosRouter {
       {
         ...(CreateUsuarioDocs as any),
       },
-      UsuariosController.create
+      UsuariosController.create as any
     );
 
     app.delete(

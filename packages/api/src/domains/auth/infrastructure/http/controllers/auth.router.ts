@@ -1,6 +1,5 @@
 import { FastifyInstance } from "fastify";
 import { AuthController } from "./auth.controller";
-import { VerificarUsuarioLogadoMiddleware } from "@/infrastructure/middlewares/verificar-usuario-logado.middleware";
 import { LoginDocs } from "../docs/login.docs";
 import { RefreshTokenDocs } from "../docs/refresh-token.docs";
 
@@ -18,7 +17,6 @@ export class AuthRouter {
       "/refresh",
       {
         ...(RefreshTokenDocs as any),
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       AuthController.refreshToken
     );

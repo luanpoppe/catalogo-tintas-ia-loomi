@@ -61,8 +61,7 @@ describe("Buscar tintas por query", () => {
   });
 
   it("usuário comum deve poder buscar tintas por cor", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const resposta = await request(app.server)
       .get("/tinta/search?cor=Branco")
@@ -88,8 +87,7 @@ describe("Buscar tintas por query", () => {
   });
 
   it("usuário comum deve poder buscar tintas por feature", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const resposta = await request(app.server)
       .get("/tinta/search?features=lavável") // Envia como string
@@ -115,8 +113,7 @@ describe("Buscar tintas por query", () => {
   });
 
   it("usuário comum deve poder buscar tintas por múltiplos critérios", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const resposta = await request(app.server)
       .get("/tinta/search?cor=Branco&ambiente=INTERNO&features=lavável")
@@ -143,8 +140,7 @@ describe("Buscar tintas por query", () => {
   });
 
   it("deve retornar um array vazio se nenhuma tinta for encontrada", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const resposta = await request(app.server)
       .get("/tinta/search?cor=Inexistente")

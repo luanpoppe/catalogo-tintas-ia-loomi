@@ -44,8 +44,7 @@ describe("Buscar usuário por email", () => {
   });
 
   it("usuário comum não deve poder buscar um usuário por email", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const { usuario: usuarioCriado, senha } =
       await UsuariosBuilder.criarUsuarioComum();

@@ -4,9 +4,7 @@ import { UsuariosBuilder } from "../@e2e-builders/usuarios.builder";
 import { ResponseLoginDTO } from "@/domains/auth/infrastructure/http/dto/login.dto";
 
 describe("Criar usuário", () => {
-  let usuarioPromise: ReturnType<
-    typeof UsuariosBuilder.criarELogarUsuarioComum
-  >;
+  let usuarioPromise: ReturnType<typeof UsuariosBuilder.criarUsuarioComum>;
 
   beforeAll(async () => {
     await app.ready();
@@ -17,13 +15,11 @@ describe("Criar usuário", () => {
   });
 
   beforeEach(async () => {
-    usuarioPromise = UsuariosBuilder.criarELogarUsuarioComum();
+    usuarioPromise = UsuariosBuilder.criarUsuarioComum();
   });
 
   it("deve ser possível fazer login com um usuário", async () => {
     const { accessToken, cookies } = await usuarioPromise;
-
-    console.log({ accessToken, cookies });
 
     const resposta = await request(app.server)
       .post("/auth/refresh")

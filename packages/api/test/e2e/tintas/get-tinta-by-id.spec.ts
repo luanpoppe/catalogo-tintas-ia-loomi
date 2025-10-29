@@ -62,7 +62,7 @@ describe("Buscar tinta por ID", () => {
     const tintaIdParaBuscar = novaTinta.id;
 
     const { accessToken: accessTokenComum, cookies: cookiesComum } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+      await UsuariosBuilder.criarUsuarioComum();
 
     const buscarResposta = await request(app.server)
       .get(`/tinta/${tintaIdParaBuscar}`)

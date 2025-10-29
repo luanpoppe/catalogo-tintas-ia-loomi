@@ -34,8 +34,7 @@ describe("Deletar usuário", () => {
   });
 
   it("usuário comum não deve poder deletar um usuário", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const { usuario: usuarioCriado, senha } =
       await UsuariosBuilder.criarUsuarioComum();

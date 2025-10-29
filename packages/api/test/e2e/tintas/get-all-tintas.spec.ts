@@ -46,8 +46,7 @@ describe("Listar todas as tintas", () => {
   });
 
   it("usuário comum deve poder listar todas as tintas", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const resposta = await request(app.server)
       .get("/tinta")

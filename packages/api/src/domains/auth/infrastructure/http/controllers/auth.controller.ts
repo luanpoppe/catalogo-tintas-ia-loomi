@@ -4,6 +4,8 @@ import { BCryptJS } from "@/lib/encrypt/bcryptjs";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { RequestLoginDTO } from "../dto/login.dto";
 import { Usuarios } from "@/generated/prisma/client";
+import { env } from "@/env";
+import { ResponseUsuarioDTO } from "@/domains/usuarios/infrastructure/http/dto/usuario.dto";
 
 export class AuthController {
   constructor() {}
@@ -21,13 +23,15 @@ export class AuthController {
     try {
       const { usuario } = await useCase.execute(req.body);
 
-      const { accessToken, refreshToken } =
-        await AuthController.gerarTokensLogin(usuario, reply);
+      const { accessToken, refreshToken } = await AuthController.gerarTokens(
+        usuario,
+        reply
+      );
 
       return reply
         .setCookie("refreshToken", refreshToken, {
           path: "/",
-          secure: true,
+          secure: env.NODE_ENV === "prod",
           sameSite: true,
           httpOnly: true,
         })
@@ -67,7 +71,7 @@ export class AuthController {
     return reply
       .setCookie("refreshToken", refreshToken, {
         path: "/",
-        secure: true,
+        secure: env.NODE_ENV === "prod",
         sameSite: true,
         httpOnly: true,
       })
@@ -75,10 +79,7 @@ export class AuthController {
       .send({ accessToken });
   }
 
-  private static async gerarTokensLogin(
-    usuario: Usuarios,
-    reply: FastifyReply
-  ) {
+  static async gerarTokens(usuario: Usuarios, reply: FastifyReply) {
     const accessToken = await reply.jwtSign(
       { tipoDeUsuario: usuario.tipoUsuario },
       {

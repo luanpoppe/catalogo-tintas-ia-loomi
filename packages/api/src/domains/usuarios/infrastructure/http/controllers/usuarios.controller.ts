@@ -10,7 +10,11 @@ import {
   RequestUsuarioDTO,
   ResponseUsuarioDTO,
   RequestUpdateUsuarioDTO,
+  ResponseCreateUsuarioDTO,
 } from "../dto/usuario.dto";
+import { env } from "@/env";
+import { AuthController } from "@/domains/auth/infrastructure/http/controllers/auth.controller";
+import { Usuarios } from "@/generated/prisma/client";
 
 export class UsuariosController {
   static async create(
@@ -18,7 +22,7 @@ export class UsuariosController {
       Body: RequestUsuarioDTO;
     }>,
     reply: FastifyReply<{
-      Body: ResponseUsuarioDTO;
+      Body: ResponseCreateUsuarioDTO;
     }>
   ) {
     const usuarioRepository = new UsuarioRepository();
@@ -26,11 +30,24 @@ export class UsuariosController {
 
     const useCase = new CreateUsuarioUseCase(usuarioRepository, encryptService);
 
-    const tipoUsuario = req?.user?.tipoDeUsuario;
+    const tipoUsuario = !!req?.user?.tipoDeUsuario;
 
     const { usuario } = await useCase.execute(req.body, tipoUsuario);
 
-    return reply.status(201).send(usuario);
+    const { accessToken, refreshToken } = await AuthController.gerarTokens(
+      usuario as Usuarios,
+      reply
+    );
+
+    return reply
+      .setCookie("refreshToken", refreshToken, {
+        path: "/",
+        secure: env.NODE_ENV === "prod",
+        sameSite: true,
+        httpOnly: true,
+      })
+      .status(201)
+      .send({ usuario, accessToken });
   }
 
   static async delete(

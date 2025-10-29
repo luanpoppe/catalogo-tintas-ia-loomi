@@ -19,7 +19,11 @@ export class ApiError extends Error {
 
 async function refreshAccessToken(): Promise<boolean> {
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {});
+    const response = await axios.post(
+      `${API_BASE_URL}/auth/refresh`,
+      {},
+      { withCredentials: true }
+    );
 
     setTokens({
       accessToken: response.data.accessToken,
@@ -54,6 +58,7 @@ export async function apiRequest<T = any>(
       url: endpoint,
       headers: requestHeaders,
       ...axiosOptions,
+      withCredentials: true,
     });
   } catch (error) {
     const axiosError = error as AxiosError;
