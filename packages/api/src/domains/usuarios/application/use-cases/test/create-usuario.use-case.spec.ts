@@ -69,7 +69,7 @@ describe("CreateUsuarioUseCase", () => {
     mockEncrypt.hash.mockResolvedValue(hashedPassword);
     mockUsuarioRepository.create.mockResolvedValue(createdUsuario);
 
-    const result = await createUsuarioUseCase.execute(requestBody, "ADMIN");
+    const result = await createUsuarioUseCase.execute(requestBody, true); // Passa true para isAdmin
 
     expect(mockEncrypt.hash).toHaveBeenCalledWith(requestBody.senha);
     expect(mockUsuarioRepository.create).toHaveBeenCalledWith({
