@@ -31,11 +31,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    # --- CORREÇÃO ADICIONADA AQUI ---
-    # Adicionamos 'npx prisma generate...' ao início do comando.
-    # Isso garante que os binários corretos do Prisma (para Linux)
-    # sejam gerados dentro do contêiner antes da aplicação iniciar.
-    command: sh -c "npx prisma generate --schema=packages/database/prisma/schema.prisma && npx prisma migrate deploy --schema=packages/database/prisma/schema.prisma && npm run build --workspace=packages/agente-tintas-ia && npm run build --workspace=packages/database && npm run start --workspace=packages/api"
+    entrypoint: /app/docker-entrypoint.sh
 
 volumes:
   pgdata:

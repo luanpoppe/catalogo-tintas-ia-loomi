@@ -16,11 +16,17 @@ RUN npm install
 # Copia o restante do código da aplicação
 COPY . .
 
-# Gera o cliente Prisma
+# Gera o cliente Prisma (é bom ter na imagem base como cache)
 RUN npx prisma generate --schema=packages/database/prisma/schema.prisma
+
+# --- MUDANÇA AQUI ---
+# Copia o script de entrypoint e o torna executável
+COPY docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
+# --- FIM DA MUDANÇA ---
 
 # Expõe a porta que a API irá rodar
 EXPOSE 3333
 
-# Comando para iniciar a aplicação
-CMD ["npm", "run", "start", "--workspace=packages/api"]
+# O comando padrão agora é o nosso script.
+CMD ["/app/docker-entrypoint.sh"]
