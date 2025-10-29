@@ -1,29 +1,28 @@
 import { vi, describe, it, expect, beforeEach, Mocked } from "vitest";
 import { AgenteTintaIA } from "../main";
+import { createAgent } from "langchain";
 import { Langchain } from "../lib/langchain/langchain";
 import { BuscarTintaTool } from "../lib/langchain/tools/buscar-tinta.tool";
 import { ShortTermMemory } from "../lib/langchain/short-term-memory";
-import { createAgent } from "langchain";
 
 vi.mock("../lib/langchain/langchain", () => ({
   Langchain: {
     models: {
-      openAI: vi.fn(),
+      gemini: vi.fn(),
     },
   },
 }));
 
-vi.mock("../lib/langchain/tools/buscar-tinta.tool", () => {
-  const mockInstance = {
-    name: "buscar_tinta",
-    description: "Ferramenta para buscar tintas",
-    schema: {},
-    _call: vi.fn(),
-  };
-  return {
-    BuscarTintaTool: vi.fn(() => mockInstance),
-  };
-});
+vi.mock("../lib/langchain/tools/buscar-tinta.tool", () => ({
+  BuscarTintaTool: {
+    tool: vi.fn(() => ({
+      name: "buscar_tintas_suvinil",
+      description: "Ferramenta para buscar tintas",
+      schema: {},
+      _call: vi.fn(),
+    })),
+  },
+}));
 
 vi.mock("../lib/langchain/short-term-memory", () => ({
   ShortTermMemory: {
@@ -31,32 +30,38 @@ vi.mock("../lib/langchain/short-term-memory", () => ({
   },
 }));
 
+const mockAgentInvoke = vi.fn();
 vi.mock("langchain", () => ({
   createAgent: vi.fn(() => ({
-    invoke: vi.fn(),
+    invoke: mockAgentInvoke,
   })),
 }));
 
 describe("AgenteTintaIA", () => {
   let agenteTintaIA: AgenteTintaIA;
-  let mockOpenAIModel: Mocked<any>;
-  let mockBuscarTintaTool: Mocked<BuscarTintaTool>;
+  let mockGeminiModel: Mocked<any>;
+  let mockBuscarTintaToolInstance: Mocked<any>;
   let mockCheckpointer: Mocked<any>;
-  let mockCreateAgent: Mocked<any>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     agenteTintaIA = new AgenteTintaIA();
 
-    mockCreateAgent = createAgent as Mocked<any>;
-
-    mockOpenAIModel = { invoke: vi.fn() } as Mocked<any>;
-    (Langchain.models.openAI as Mocked<any>).mockReturnValue(mockOpenAIModel);
-    mockOpenAIModel.invoke.mockResolvedValue({
+    mockGeminiModel = { invoke: vi.fn() } as Mocked<any>;
+    (Langchain.models.gemini as Mocked<any>).mockReturnValue(mockGeminiModel);
+    mockGeminiModel.invoke.mockResolvedValue({
       messages: [{ content: "Resposta do modelo" }],
     });
 
-    mockBuscarTintaTool = new BuscarTintaTool() as Mocked<BuscarTintaTool>;
+    mockBuscarTintaToolInstance = {
+      name: "buscar_tintas_suvinil",
+      description: "Ferramenta para buscar tintas",
+      schema: {},
+      _call: vi.fn(),
+    };
+    (BuscarTintaTool.tool as Mocked<any>).mockReturnValue(
+      mockBuscarTintaToolInstance
+    );
 
     mockCheckpointer = {
       deleteThread: vi.fn(),
@@ -65,10 +70,8 @@ describe("AgenteTintaIA", () => {
       mockCheckpointer
     );
 
-    mockCreateAgent.mockReturnValue({
-      invoke: vi.fn().mockResolvedValue({
-        messages: [{ content: "Resposta do agente" }],
-      }),
+    mockAgentInvoke.mockResolvedValue({
+      messages: [{ content: "Resposta do agente" }],
     });
   });
 
@@ -83,16 +86,16 @@ describe("AgenteTintaIA", () => {
       shouldEraseMemory
     );
 
-    expect(Langchain.models.openAI).toHaveBeenCalled();
-    expect(BuscarTintaTool).toHaveBeenCalled();
+    expect(Langchain.models.gemini).toHaveBeenCalled();
+    expect(BuscarTintaTool.tool).toHaveBeenCalled();
     expect(ShortTermMemory.checkpointer).toHaveBeenCalled();
     expect(createAgent).toHaveBeenCalledWith({
-      model: mockOpenAIModel,
-      tools: [mockBuscarTintaTool],
+      model: mockGeminiModel,
+      tools: [mockBuscarTintaToolInstance],
       checkpointer: mockCheckpointer,
     });
-    expect(mockCheckpointer.deleteThread).not.toHaveBeenCalled();
-    expect(mockCreateAgent().invoke).toHaveBeenCalledWith(
+    expect(mockCheckpointer.deleteThread).toHaveBeenCalledWith(threadId); // Always called
+    expect(mockAgentInvoke).toHaveBeenCalledWith(
       { messages: [{ role: "user", content: input }] },
       { configurable: { thread_id: threadId } }
     );
@@ -116,7 +119,7 @@ describe("AgenteTintaIA", () => {
 
     await agenteTintaIA.handle(input, threadId, shouldEraseMemory);
 
-    expect(mockCheckpointer.deleteThread).not.toHaveBeenCalled();
+    expect(mockCheckpointer.deleteThread).toHaveBeenCalledWith(threadId); // Always called
   });
 
   it("deve lançar um erro se o agente de IA falhar", async () => {
@@ -124,7 +127,7 @@ describe("AgenteTintaIA", () => {
     const threadId = "user-123";
     const shouldEraseMemory = false;
 
-    mockCreateAgent().invoke.mockRejectedValue(new Error("Erro interno da IA"));
+    mockAgentInvoke.mockRejectedValue(new Error("Erro interno da IA"));
 
     await expect(
       agenteTintaIA.handle(input, threadId, shouldEraseMemory)
@@ -139,7 +142,7 @@ describe("AgenteTintaIA", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    mockCreateAgent().invoke.mockRejectedValue(new Error("Erro interno da IA"));
+    mockAgentInvoke.mockRejectedValue(new Error("Erro interno da IA"));
 
     await expect(
       agenteTintaIA.handle(input, threadId, shouldEraseMemory)

@@ -40,7 +40,7 @@ export class BuscarTintaTool {
 
   static async call(input: string): Promise<string> {
     try {
-      console.log("COMEÇOU A CHAMAR A TOOL");
+      console.log("Tool de buscar tintas na vector store iniciada");
 
       const queryVetor = await embeddings.embedQuery(input);
 
