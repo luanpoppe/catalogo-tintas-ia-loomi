@@ -27,9 +27,9 @@ interface AuthFormProps {
 
 export function AuthForm({ mode, onSuccess }: AuthFormProps) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [nome, setNome] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -38,7 +38,7 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
     setIsLoading(true);
 
     try {
-      if (mode === "cadastrar" && password !== confirmPassword) {
+      if (mode === "cadastrar" && senha !== confirmarSenha) {
         toast({
           title: "Erro de Cadastro",
           description: "As senhas não coincidem. Por favor, verifique.",
@@ -51,17 +51,18 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
       const endpoint =
         mode === "entrar" ? API_ROUTES.AUTH.LOGIN : API_ROUTES.AUTH.CADASTRAR;
       const body =
-        mode === "entrar" ? { email, password } : { email, password, name };
+        mode === "entrar"
+          ? { email, senha }
+          : { email, senha, nome, tipoUsuario: "COMUM" }; // Adicionado tipoUsuario
 
       const data = await apiRequest(endpoint, {
         method: "POST",
-        data: body, // Use 'data' instead of 'body' for Axios
+        data: body,
         requiresAuth: false,
       });
 
       setTokens({
         accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
       });
 
       setUser(data.user);
@@ -72,6 +73,7 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
           mode === "entrar"
             ? "Bem-vindo de volta!"
             : "Sua conta foi criada com sucesso.",
+        variant: "success",
       });
 
       onSuccess?.();
@@ -107,8 +109,8 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
                 id="name"
                 type="text"
                 placeholder="Seu nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
                 required
                 disabled={isLoading}
               />
@@ -132,8 +134,8 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
               id="password"
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
               required
               disabled={isLoading}
               minLength={6}
@@ -146,8 +148,8 @@ export function AuthForm({ mode, onSuccess }: AuthFormProps) {
                 id="confirm-password"
                 type="password"
                 placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
                 required
                 disabled={isLoading}
                 minLength={6}
