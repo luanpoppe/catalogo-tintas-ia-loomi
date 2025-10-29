@@ -4,7 +4,7 @@ export const API_ROUTES = {
   AUTH: {
     BASE: "/auth",
     LOGIN: "/auth/login",
-    CADASTRAR: "/auth/cadastrar",
+    CADASTRAR: "/usuario",
     REFRESH: "/auth/refresh",
   },
   CHAT: "/chat",

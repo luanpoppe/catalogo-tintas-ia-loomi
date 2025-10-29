@@ -1,12 +1,7 @@
 // API client with automatic token refresh
 
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-import {
-  getAccessToken,
-  getRefreshToken,
-  setTokens,
-  clearTokens,
-} from "./auth";
+import { getAccessToken, setTokens, clearTokens } from "./auth";
 import { toast } from "@/hooks/use-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -23,20 +18,11 @@ export class ApiError extends Error {
 }
 
 async function refreshAccessToken(): Promise<boolean> {
-  const refreshToken = getRefreshToken();
-
-  if (!refreshToken) {
-    return false;
-  }
-
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-      refreshToken,
-    });
+    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {});
 
     setTokens({
       accessToken: response.data.accessToken,
-      refreshToken: response.data.refreshToken,
     });
 
     return true;
@@ -64,89 +50,34 @@ export async function apiRequest<T = any>(
   }
 
   try {
-    let response: AxiosResponse<T>;
-    if (axiosOptions.method === "POST") {
-      response = await axios.post(
-        `${API_BASE_URL}${endpoint}`,
-        axiosOptions.data,
-        { headers: requestHeaders }
-      );
-    } else if (axiosOptions.method === "PUT") {
-      response = await axios.put(
-        `${API_BASE_URL}${endpoint}`,
-        axiosOptions.data,
-        { headers: requestHeaders }
-      );
-    } else if (axiosOptions.method === "DELETE") {
-      response = await axios.delete(`${API_BASE_URL}${endpoint}`, {
-        headers: requestHeaders,
-      });
-    } else {
-      response = await axios.get(`${API_BASE_URL}${endpoint}`, {
-        headers: requestHeaders,
-        params: axiosOptions.params,
-      });
-    }
-    return response.data;
+    return await performRequest(endpoint, axiosOptions, requestHeaders);
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      // If unauthorized, try to refresh token
+      // Se não autorizado, tenta refrescar o token
       if (axiosError.response.status === 401 && requiresAuth) {
         const refreshed = await refreshAccessToken();
 
         if (refreshed) {
-          // Retry request with new token
+          // Tenta a requisição novamente com o novo token
           const newAccessToken = getAccessToken();
           if (newAccessToken) {
             (requestHeaders as Record<string, string>)[
               "Authorization"
             ] = `Bearer ${newAccessToken}`;
           }
-          try {
-            let response: AxiosResponse<T>;
-            if (axiosOptions.method === "POST") {
-              response = await axios.post(
-                `${API_BASE_URL}${endpoint}`,
-                axiosOptions.data,
-                { headers: requestHeaders }
-              );
-            } else if (axiosOptions.method === "PUT") {
-              response = await axios.put(
-                `${API_BASE_URL}${endpoint}`,
-                axiosOptions.data,
-                { headers: requestHeaders }
-              );
-            } else if (axiosOptions.method === "DELETE") {
-              response = await axios.delete(`${API_BASE_URL}${endpoint}`, {
-                headers: requestHeaders,
-              });
-            } else {
-              response = await axios.get(`${API_BASE_URL}${endpoint}`, {
-                headers: requestHeaders,
-                params: axiosOptions.params,
-              });
-            }
-            return response.data;
-          } catch (retryError) {
-            const retryAxiosError = retryError as AxiosError;
-            clearTokens();
-            if (typeof window !== "undefined") {
-              window.location.href = "/entrar";
-            }
-            throw new ApiError(
-              (retryAxiosError.response?.data as any)?.message ||
-                "Sessão expirada",
-              retryAxiosError.response?.status || 401,
-              retryAxiosError.response?.data
-            );
-          }
+          return await performRequest(endpoint, axiosOptions, requestHeaders);
         } else {
-          // Refresh failed, clear tokens and redirect to login
+          // Refresh falhou, limpa os tokens e redireciona para o login
           clearTokens();
           if (typeof window !== "undefined") {
             window.location.href = "/entrar";
           }
+          toast({
+            title: "Sessão expirada",
+            description: "Por favor, faça login novamente.",
+            variant: "destructive",
+          });
           throw new ApiError("Sessão expirada", 401);
         }
       }
@@ -180,120 +111,40 @@ export async function apiRequest<T = any>(
   }
 }
 
-export async function streamChatMessage(
-  message: string,
-  onChunk: (chunk: string) => void,
-  onImage?: (imageUrl: string) => void,
-  onComplete?: () => void,
-  onError?: (error: Error) => void
-) {
-  const accessToken = getAccessToken();
-
-  if (!accessToken) {
-    onError?.(new ApiError("Não autenticado", 401));
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/chat/stream`,
-      { message },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        responseType: "stream", // Important for streaming
-      }
+async function performRequest<T = any>(
+  endpoint: string,
+  axiosOptions: AxiosRequestConfig,
+  requestHeaders: AxiosRequestConfig["headers"]
+): Promise<T> {
+  let response: AxiosResponse<T>;
+  if (axiosOptions.method === "POST") {
+    response = await axios.post(
+      `${API_BASE_URL}${endpoint}`,
+      axiosOptions.data,
+      { headers: requestHeaders }
     );
-
-    const reader = response.data; // Axios stream is directly available here
-
-    if (!reader) {
-      throw new Error("Nenhum corpo de resposta");
-    }
-
-    reader.on("data", (chunk: Buffer) => {
-      const lines = chunk.toString().split("\n");
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.slice(6);
-          if (data === "[DONE]") {
-            continue;
-          }
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.type === "text") {
-              onChunk(parsed.content);
-            } else if (parsed.type === "image" && onImage) {
-              onImage(parsed.url);
-            }
-          } catch {
-            // Ignore parse errors
-          }
-        }
-      }
+  } else if (axiosOptions.method === "PUT") {
+    response = await axios.put(
+      `${API_BASE_URL}${endpoint}`,
+      axiosOptions.data,
+      { headers: requestHeaders }
+    );
+  } else if (axiosOptions.method === "DELETE") {
+    response = await axios.delete(`${API_BASE_URL}${endpoint}`, {
+      headers: requestHeaders,
     });
-
-    reader.on("end", () => {
-      onComplete?.();
+  } else {
+    response = await axios.get(`${API_BASE_URL}${endpoint}`, {
+      headers: requestHeaders,
+      params: axiosOptions.params,
     });
-
-    reader.on("error", (error: Error) => {
-      onError?.(
-        error instanceof Error ? error : new Error("Erro desconhecido")
-      );
-    });
-  } catch (error) {
-    const axiosError = error as AxiosError;
-    if (axiosError.response) {
-      if (axiosError.response.status === 401) {
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-          return streamChatMessage(
-            message,
-            onChunk,
-            onImage,
-            onComplete,
-            onError
-          );
-        } else {
-          clearTokens();
-          if (typeof window !== "undefined") {
-            window.location.href = "/entrar";
-          }
-          onError?.(new ApiError("Sessão expirada", 401));
-          return;
-        }
-      }
-      const errorMessage =
-        (axiosError.response.data as any)?.message || "Requisição falhou";
-      toast({
-        title: "Erro no chat",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      onError?.(
-        new ApiError(
-          errorMessage,
-          axiosError.response.status,
-          axiosError.response.data
-        )
-      );
-    } else if (axiosError.request) {
-      toast({
-        title: "Erro de rede",
-        description: "Nenhuma resposta recebida do servidor para o chat.",
-        variant: "destructive",
-      });
-      onError?.(new ApiError("Nenhuma resposta recebida do servidor", 0));
-    } else {
-      toast({
-        title: "Erro inesperado no chat",
-        description: axiosError.message,
-        variant: "destructive",
-      });
-      onError?.(new ApiError(axiosError.message, 0));
-    }
   }
+  return response.data;
+}
+
+export async function sendChatMessage(userMessage: string): Promise<any> {
+  return apiRequest("/chat", {
+    method: "POST",
+    data: { userMessage },
+  });
 }
