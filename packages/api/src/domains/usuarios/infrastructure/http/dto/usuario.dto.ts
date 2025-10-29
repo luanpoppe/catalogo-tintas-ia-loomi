@@ -28,3 +28,12 @@ export type RequestUpdateUsuarioDTO = z.infer<
 export const ResponseUsuarioDTOSchema = UsuarioSchema;
 
 export type ResponseUsuarioDTO = z.infer<typeof ResponseUsuarioDTOSchema>;
+
+export const ResponseCreateUsuarioDTOSchema = z.object({
+  usuario: ResponseUsuarioDTOSchema,
+  accessToken: z.string(),
+});
+
+export type ResponseCreateUsuarioDTO = z.infer<
+  typeof ResponseCreateUsuarioDTOSchema
+>;
