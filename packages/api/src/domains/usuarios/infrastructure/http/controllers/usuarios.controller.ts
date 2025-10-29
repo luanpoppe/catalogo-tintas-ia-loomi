@@ -13,6 +13,8 @@ import {
   ResponseCreateUsuarioDTO,
 } from "../dto/usuario.dto";
 import { env } from "@/env";
+import { AuthController } from "@/domains/auth/infrastructure/http/controllers/auth.controller";
+import { Usuarios } from "@/generated/prisma/client";
 
 export class UsuariosController {
   static async create(
@@ -28,15 +30,14 @@ export class UsuariosController {
 
     const useCase = new CreateUsuarioUseCase(usuarioRepository, encryptService);
 
-    const tipoUsuario = req?.user?.tipoDeUsuario;
+    const tipoUsuario = !!req?.user?.tipoDeUsuario;
 
-    const { usuario, accessToken, refreshToken } = await useCase.execute(
-      req.body,
-      reply,
-      tipoUsuario
+    const { usuario } = await useCase.execute(req.body, tipoUsuario);
+
+    const { accessToken, refreshToken } = await AuthController.gerarTokens(
+      usuario as Usuarios,
+      reply
     );
-
-    console.log({ usuario, accessToken });
 
     return reply
       .setCookie("refreshToken", refreshToken, {

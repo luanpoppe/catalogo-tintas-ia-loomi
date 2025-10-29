@@ -5,6 +5,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { RequestLoginDTO } from "../dto/login.dto";
 import { Usuarios } from "@/generated/prisma/client";
 import { env } from "@/env";
+import { ResponseUsuarioDTO } from "@/domains/usuarios/infrastructure/http/dto/usuario.dto";
 
 export class AuthController {
   constructor() {}
@@ -22,8 +23,10 @@ export class AuthController {
     try {
       const { usuario } = await useCase.execute(req.body);
 
-      const { accessToken, refreshToken } =
-        await AuthController.gerarTokensLogin(usuario, reply);
+      const { accessToken, refreshToken } = await AuthController.gerarTokens(
+        usuario,
+        reply
+      );
 
       return reply
         .setCookie("refreshToken", refreshToken, {
@@ -76,7 +79,7 @@ export class AuthController {
       .send({ accessToken });
   }
 
-  static async gerarTokensLogin(usuario: Usuarios, reply: FastifyReply) {
+  static async gerarTokens(usuario: Usuarios, reply: FastifyReply) {
     const accessToken = await reply.jwtSign(
       { tipoDeUsuario: usuario.tipoUsuario },
       {
