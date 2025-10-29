@@ -1,9 +1,12 @@
 import { vi, describe, it, expect, beforeEach, Mocked } from "vitest";
 import { AgenteTintaIA } from "../main";
-import { createAgent } from "langchain";
 import { Langchain } from "../lib/langchain/langchain";
 import { BuscarTintaTool } from "../lib/langchain/tools/buscar-tinta.tool";
 import { ShortTermMemory } from "../lib/langchain/short-term-memory";
+import { ListarTodasTintasTool } from "../lib/langchain/tools/listar-todas-tintas.tool";
+import { BuscarTintasPorQueryTool } from "../lib/langchain/tools/buscar-tintas-por-query.tool";
+import { BuscarInternetTool } from "../lib/langchain/tools/buscar-internet.tool";
+import { GerarImagemTintaTool } from "../lib/langchain/tools/gerar-imagem-tinta.tool";
 
 vi.mock("../lib/langchain/langchain", () => ({
   Langchain: {
@@ -18,6 +21,50 @@ vi.mock("../lib/langchain/tools/buscar-tinta.tool", () => ({
     tool: vi.fn(() => ({
       name: "buscar_tintas_suvinil",
       description: "Ferramenta para buscar tintas",
+      schema: {},
+      _call: vi.fn(),
+    })),
+  },
+}));
+
+vi.mock("../lib/langchain/tools/listar-todas-tintas.tool", () => ({
+  ListarTodasTintasTool: {
+    tool: vi.fn(() => ({
+      name: "listar_todas_tintas",
+      description: "Ferramenta para listar todas as tintas",
+      schema: {},
+      _call: vi.fn(),
+    })),
+  },
+}));
+
+vi.mock("../lib/langchain/tools/buscar-tintas-por-query.tool", () => ({
+  BuscarTintasPorQueryTool: {
+    tool: vi.fn(() => ({
+      name: "buscar_tintas_por_query",
+      description: "Ferramenta para buscar tintas por query",
+      schema: {},
+      _call: vi.fn(),
+    })),
+  },
+}));
+
+vi.mock("../lib/langchain/tools/buscar-internet.tool", () => ({
+  BuscarInternetTool: {
+    tool: vi.fn(() => ({
+      name: "buscar_internet",
+      description: "Ferramenta para buscar na internet",
+      schema: {},
+      _call: vi.fn(),
+    })),
+  },
+}));
+
+vi.mock("../lib/langchain/tools/gerar-imagem-tinta.tool", () => ({
+  GerarImagemTintaTool: {
+    tool: vi.fn(() => ({
+      name: "gerar_imagem_tinta",
+      description: "Ferramenta para gerar imagem de tinta",
       schema: {},
       _call: vi.fn(),
     })),
@@ -41,6 +88,10 @@ describe("AgenteTintaIA", () => {
   let agenteTintaIA: AgenteTintaIA;
   let mockGeminiModel: Mocked<any>;
   let mockBuscarTintaToolInstance: Mocked<any>;
+  let mockListarTodasTintasToolInstance: Mocked<any>;
+  let mockBuscarTintasPorQueryToolInstance: Mocked<any>;
+  let mockBuscarInternetToolInstance: Mocked<any>;
+  let mockGerarImagemTintaToolInstance: Mocked<any>;
   let mockCheckpointer: Mocked<any>;
 
   beforeEach(() => {
@@ -63,6 +114,46 @@ describe("AgenteTintaIA", () => {
       mockBuscarTintaToolInstance
     );
 
+    mockListarTodasTintasToolInstance = {
+      name: "listar_todas_tintas",
+      description: "Ferramenta para listar todas as tintas",
+      schema: {},
+      _call: vi.fn(),
+    };
+    (ListarTodasTintasTool.tool as Mocked<any>).mockReturnValue(
+      mockListarTodasTintasToolInstance
+    );
+
+    mockBuscarTintasPorQueryToolInstance = {
+      name: "buscar_tintas_por_query",
+      description: "Ferramenta para buscar tintas por query",
+      schema: {},
+      _call: vi.fn(),
+    };
+    (BuscarTintasPorQueryTool.tool as Mocked<any>).mockReturnValue(
+      mockBuscarTintasPorQueryToolInstance
+    );
+
+    mockBuscarInternetToolInstance = {
+      name: "buscar_internet",
+      description: "Ferramenta para buscar na internet",
+      schema: {},
+      _call: vi.fn(),
+    };
+    (BuscarInternetTool.tool as Mocked<any>).mockReturnValue(
+      mockBuscarInternetToolInstance
+    );
+
+    mockGerarImagemTintaToolInstance = {
+      name: "gerar_imagem_tinta",
+      description: "Ferramenta para gerar imagem de tinta",
+      schema: {},
+      _call: vi.fn(),
+    };
+    (GerarImagemTintaTool.tool as Mocked<any>).mockReturnValue(
+      mockGerarImagemTintaToolInstance
+    );
+
     mockCheckpointer = {
       deleteThread: vi.fn(),
     };
@@ -71,7 +162,7 @@ describe("AgenteTintaIA", () => {
     );
 
     mockAgentInvoke.mockResolvedValue({
-      messages: [{ content: "Resposta do agente" }],
+      structuredResponse: "Resposta do agente",
     });
   });
 
@@ -88,13 +179,12 @@ describe("AgenteTintaIA", () => {
 
     expect(Langchain.models.gemini).toHaveBeenCalled();
     expect(BuscarTintaTool.tool).toHaveBeenCalled();
+    expect(ListarTodasTintasTool.tool).toHaveBeenCalled();
+    expect(BuscarTintasPorQueryTool.tool).toHaveBeenCalled();
+    expect(BuscarInternetTool.tool).toHaveBeenCalled();
+    expect(GerarImagemTintaTool.tool).toHaveBeenCalled();
     expect(ShortTermMemory.checkpointer).toHaveBeenCalled();
-    expect(createAgent).toHaveBeenCalledWith({
-      model: mockGeminiModel,
-      tools: [mockBuscarTintaToolInstance],
-      checkpointer: mockCheckpointer,
-    });
-    expect(mockCheckpointer.deleteThread).toHaveBeenCalledWith(threadId); // Always called
+    expect(mockCheckpointer.deleteThread).not.toHaveBeenCalled();
     expect(mockAgentInvoke).toHaveBeenCalledWith(
       { messages: [{ role: "user", content: input }] },
       { configurable: { thread_id: threadId } }
@@ -119,7 +209,7 @@ describe("AgenteTintaIA", () => {
 
     await agenteTintaIA.handle(input, threadId, shouldEraseMemory);
 
-    expect(mockCheckpointer.deleteThread).toHaveBeenCalledWith(threadId); // Always called
+    expect(mockCheckpointer.deleteThread).not.toHaveBeenCalled();
   });
 
   it("deve lançar um erro se o agente de IA falhar", async () => {
