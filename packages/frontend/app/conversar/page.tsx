@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
-import { streamChatMessage } from "@/lib/api";
+import { sendChatMessage } from "@/lib/api"; // Importa sendChatMessage
 import { ChatHeader } from "@/components/chat-header";
 import { ChatContainer } from "@/components/chat-container";
 import { ChatInput } from "@/components/chat-input";
@@ -19,6 +19,13 @@ export default function ChatPage() {
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
     null
   );
+  const [inputMessage, setInputMessage] = useState<string>(""); // Novo estado para o input
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push(APP_ROUTES.ENTRAR);
+    }
+  }, [router]);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -78,114 +85,53 @@ export default function ChatPage() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    setInputMessage(""); // Limpa o input após enviar
     setIsLoading(true);
 
-    // Create placeholder for assistant message
-    const assistantMessageId = (Date.now() + 1).toString();
-    const assistantMessage: Message = {
-      id: assistantMessageId,
-      role: "assistant",
-      content: "",
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, assistantMessage]);
-    setStreamingMessageId(assistantMessageId);
-
-    let backendAvailable = true;
-
-    streamChatMessage(
-      content,
-      // On text chunk
-      (chunk) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === assistantMessageId
-              ? { ...msg, content: msg.content + chunk }
-              : msg
-          )
-        );
+    const typingMessageId = (Date.now() + 1).toString();
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: typingMessageId,
+        role: "assistant",
+        content: "Digitando...", // Mensagem de "digitando..."
+        timestamp: new Date(),
+        isTyping: true, // Propriedade para identificar a mensagem de digitação
       },
-      // On image
-      (imageUrl) => {
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === assistantMessageId ? { ...msg, imageUrl } : msg
-          )
-        );
-      },
-      // On complete
-      () => {
-        setIsLoading(false);
-        setStreamingMessageId(null);
-      },
-      // On error
-      async (error) => {
-        // If backend not available, use mock responses
-        if (
-          error.message.includes("404") ||
-          error.message.includes("Not Found") ||
-          error.message.includes("Failed to fetch")
-        ) {
-          backendAvailable = false;
+    ]);
 
-          try {
-            // Simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const response = await sendChatMessage(content); // Chama a nova função sendChatMessage
 
-            const mockResponse = getMockResponse(content);
-
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg.id === assistantMessageId
-                  ? {
-                      ...msg,
-                      content: mockResponse.message,
-                      imageUrl: mockResponse.imageUrl,
-                    }
-                  : msg
-              )
-            );
-
-            toast({
-              title: "Modo de Demonstração",
-              description:
-                "Backend não conectado. Usando respostas simuladas para teste.",
-            });
-          } catch (fallbackError: any) {
-            toast({
-              title: "Erro ao processar mensagem",
-              description:
-                "Não foi possível processar a mensagem. Tente novamente.",
-              variant: "destructive",
-            });
-
-            // Remove failed message
-            setMessages((prev) =>
-              prev.filter((msg) => msg.id !== assistantMessageId)
-            );
-          } finally {
-            setIsLoading(false);
-            setStreamingMessageId(null);
-          }
-        } else {
-          toast({
-            title: "Erro ao enviar mensagem",
-            description:
-              error.message ||
-              "Não foi possível enviar a mensagem. Tente novamente.",
-            variant: "destructive",
-          });
-
-          // Remove failed message
-          setMessages((prev) =>
-            prev.filter((msg) => msg.id !== assistantMessageId)
-          );
-          setIsLoading(false);
-          setStreamingMessageId(null);
-        }
-      }
-    );
+      // Remove a mensagem de "digitando..." e adiciona a resposta real
+      setMessages((prev) =>
+        prev
+          .filter((msg) => msg.id !== typingMessageId)
+          .concat({
+            id: (Date.now() + 2).toString(), // Novo ID para a mensagem real
+            role: "assistant",
+            content: response.aiMessage, // Acessa a propriedade aiMessage
+            imageUrl: response.imageUrl, // Mantém para compatibilidade futura, se houver
+            timestamp: new Date(),
+          })
+      );
+    } catch (error: any) {
+      toast({
+        title: "Erro ao enviar mensagem",
+        description:
+          error.message ||
+          "Não foi possível enviar a mensagem. Tente novamente.",
+        variant: "destructive",
+      });
+      // Remove a mensagem do usuário e a mensagem de "digitando..." se a requisição falhar
+      setMessages((prev) =>
+        prev.filter(
+          (msg) => msg.id !== userMessage.id && msg.id !== typingMessageId
+        )
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isAuthenticated()) {
@@ -195,10 +141,19 @@ export default function ChatPage() {
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-purple-50/50 via-white to-purple-50/50 dark:from-purple-950/10 dark:via-background dark:to-purple-950/10">
       <ChatHeader />
-      <ChatContainer messages={messages} />
+      <ChatContainer
+        messages={messages}
+        onSuggestionClick={handleSendMessage}
+      />{" "}
+      {/* Passa handleSendMessage */}
       <div className="border-t border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
-          <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
+          <ChatInput
+            onSend={handleSendMessage}
+            isLoading={isLoading}
+            onSetMessage={setInputMessage} // Passa setInputMessage
+            value={inputMessage} // Controla o valor do input
+          />
         </div>
       </div>
     </div>
