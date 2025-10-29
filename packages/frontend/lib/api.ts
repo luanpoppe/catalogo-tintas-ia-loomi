@@ -1,6 +1,6 @@
 // API client with automatic token refresh
 
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { getAccessToken, setTokens, clearTokens } from "./auth";
 import { toast } from "@/hooks/use-toast";
 

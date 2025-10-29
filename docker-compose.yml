@@ -33,5 +33,16 @@ services:
       - /app/node_modules
     entrypoint: /app/docker-entrypoint.sh
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3333
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+
 volumes:
   pgdata:
