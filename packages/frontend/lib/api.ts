@@ -142,9 +142,12 @@ async function performRequest<T = any>(
   return response.data;
 }
 
-export async function sendChatMessage(userMessage: string): Promise<any> {
+export async function sendChatMessage(
+  userMessage: string,
+  shouldEraseMemory: boolean = false
+): Promise<any> {
   return apiRequest("/chat", {
     method: "POST",
-    data: { userMessage },
+    data: { userMessage, shouldEraseMemory },
   });
 }

@@ -16,10 +16,9 @@ export default function ChatPage() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
-    null
-  );
-  const [inputMessage, setInputMessage] = useState<string>(""); // Novo estado para o input
+  const [inputMessage, setInputMessage] = useState<string>("");
+  const [shouldEraseMemoryForNextRequest, setShouldEraseMemoryForNextRequest] =
+    useState(false); // Novo estado para controlar a limpeza de memória
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -32,6 +31,15 @@ export default function ChatPage() {
       router.push(APP_ROUTES.ENTRAR);
     }
   }, [router]);
+
+  const handleNewChat = () => {
+    setMessages([]); // Limpa todas as mensagens
+    setShouldEraseMemoryForNextRequest(true); // Define para true para a próxima requisição
+    toast({
+      title: "Nova Conversa",
+      description: "O histórico da conversa foi limpo.",
+    });
+  };
 
   const getMockResponse = (
     userMessage: string
@@ -85,7 +93,7 @@ export default function ChatPage() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputMessage(""); // Limpa o input após enviar
+    setInputMessage("");
     setIsLoading(true);
 
     const typingMessageId = (Date.now() + 1).toString();
@@ -94,24 +102,31 @@ export default function ChatPage() {
       {
         id: typingMessageId,
         role: "assistant",
-        content: "Digitando...", // Mensagem de "digitando..."
+        content: "Digitando...",
         timestamp: new Date(),
-        isTyping: true, // Propriedade para identificar a mensagem de digitação
+        isTyping: true,
       },
     ]);
 
     try {
-      const response = await sendChatMessage(content); // Chama a nova função sendChatMessage
+      const response = await sendChatMessage(
+        content,
+        shouldEraseMemoryForNextRequest
+      ); // Passa shouldEraseMemoryForNextRequest
 
-      // Remove a mensagem de "digitando..." e adiciona a resposta real
+      // Reseta o estado após o envio da requisição
+      if (shouldEraseMemoryForNextRequest) {
+        setShouldEraseMemoryForNextRequest(false);
+      }
+
       setMessages((prev) =>
         prev
           .filter((msg) => msg.id !== typingMessageId)
           .concat({
-            id: (Date.now() + 2).toString(), // Novo ID para a mensagem real
+            id: (Date.now() + 2).toString(),
             role: "assistant",
-            content: response.aiMessage, // Acessa a propriedade aiMessage
-            imageUrl: response.imageUrl, // Mantém para compatibilidade futura, se houver
+            content: response.aiMessage,
+            imageUrl: response.imageUrl,
             timestamp: new Date(),
           })
       );
@@ -123,7 +138,6 @@ export default function ChatPage() {
           "Não foi possível enviar a mensagem. Tente novamente.",
         variant: "destructive",
       });
-      // Remove a mensagem do usuário e a mensagem de "digitando..." se a requisição falhar
       setMessages((prev) =>
         prev.filter(
           (msg) => msg.id !== userMessage.id && msg.id !== typingMessageId
@@ -140,19 +154,18 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-purple-50/50 via-white to-purple-50/50 dark:from-purple-950/10 dark:via-background dark:to-purple-950/10">
-      <ChatHeader />
+      <ChatHeader onNewChat={handleNewChat} /> {/* Passa a prop onNewChat */}
       <ChatContainer
         messages={messages}
         onSuggestionClick={handleSendMessage}
-      />{" "}
-      {/* Passa handleSendMessage */}
+      />
       <div className="border-t border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <ChatInput
             onSend={handleSendMessage}
             isLoading={isLoading}
-            onSetMessage={setInputMessage} // Passa setInputMessage
-            value={inputMessage} // Controla o valor do input
+            onSetMessage={setInputMessage}
+            value={inputMessage}
           />
         </div>
       </div>
