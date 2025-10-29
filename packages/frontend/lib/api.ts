@@ -50,7 +50,11 @@ export async function apiRequest<T = any>(
   }
 
   try {
-    return await performRequest(endpoint, axiosOptions, requestHeaders);
+    return await performRequest({
+      url: endpoint,
+      headers: requestHeaders,
+      ...axiosOptions,
+    });
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
@@ -66,7 +70,11 @@ export async function apiRequest<T = any>(
               "Authorization"
             ] = `Bearer ${newAccessToken}`;
           }
-          return await performRequest(endpoint, axiosOptions, requestHeaders);
+          return await performRequest({
+            url: endpoint,
+            headers: requestHeaders,
+            ...axiosOptions,
+          });
         } else {
           // Refresh falhou, limpa os tokens e redireciona para o login
           clearTokens();
@@ -111,34 +119,11 @@ export async function apiRequest<T = any>(
   }
 }
 
-async function performRequest<T = any>(
-  endpoint: string,
-  axiosOptions: AxiosRequestConfig,
-  requestHeaders: AxiosRequestConfig["headers"]
-): Promise<T> {
-  let response: AxiosResponse<T>;
-  if (axiosOptions.method === "POST") {
-    response = await axios.post(
-      `${API_BASE_URL}${endpoint}`,
-      axiosOptions.data,
-      { headers: requestHeaders }
-    );
-  } else if (axiosOptions.method === "PUT") {
-    response = await axios.put(
-      `${API_BASE_URL}${endpoint}`,
-      axiosOptions.data,
-      { headers: requestHeaders }
-    );
-  } else if (axiosOptions.method === "DELETE") {
-    response = await axios.delete(`${API_BASE_URL}${endpoint}`, {
-      headers: requestHeaders,
-    });
-  } else {
-    response = await axios.get(`${API_BASE_URL}${endpoint}`, {
-      headers: requestHeaders,
-      params: axiosOptions.params,
-    });
-  }
+async function performRequest<T = any>(config: AxiosRequestConfig): Promise<T> {
+  const response = await axios({
+    ...config,
+    url: `${API_BASE_URL}${config.url}`,
+  });
   return response.data;
 }
 
