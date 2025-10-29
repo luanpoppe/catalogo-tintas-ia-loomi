@@ -47,6 +47,8 @@ app.register(fastifySwagger, {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+          description:
+            "Escreva seu token JWT diretamente SEM ESCREVER BEARER. Ex: eyJhbG...",
         },
       },
     },
