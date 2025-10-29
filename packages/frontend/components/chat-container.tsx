@@ -5,9 +5,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatContainerProps {
   messages: Message[];
+  onSuggestionClick: (suggestion: string) => void; // Nova prop
 }
 
-export function ChatContainer({ messages }: ChatContainerProps) {
+export function ChatContainer({
+  messages,
+  onSuggestionClick,
+}: ChatContainerProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,13 +51,28 @@ export function ChatContainer({ messages }: ChatContainerProps) {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+              <div
+                className="text-xs bg-muted px-3 py-2 rounded-full cursor-pointer hover:bg-muted/80 transition-colors"
+                onClick={() =>
+                  onSuggestionClick("Qual a melhor tinta para parede externa?")
+                }
+              >
                 Qual a melhor tinta para parede externa?
               </div>
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+              <div
+                className="text-xs bg-muted px-3 py-2 rounded-full cursor-pointer hover:bg-muted/80 transition-colors"
+                onClick={() =>
+                  onSuggestionClick("Mostre cores de azul para quarto")
+                }
+              >
                 Mostre cores de azul para quarto
               </div>
-              <div className="text-xs bg-muted px-3 py-2 rounded-full">
+              <div
+                className="text-xs bg-muted px-3 py-2 rounded-full cursor-pointer hover:bg-muted/80 transition-colors"
+                onClick={() =>
+                  onSuggestionClick("Diferença entre tinta fosca e acetinada")
+                }
+              >
                 Diferença entre tinta fosca e acetinada
               </div>
             </div>
