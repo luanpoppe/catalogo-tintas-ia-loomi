@@ -37,7 +37,10 @@ export class TintasRouter {
       "/",
       {
         ...(CreateTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.create
     );
@@ -46,7 +49,10 @@ export class TintasRouter {
       "/:id",
       {
         ...(UpdateTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.update
     );
@@ -55,7 +61,10 @@ export class TintasRouter {
       "/:id",
       {
         ...(DeleteTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.delete
     );

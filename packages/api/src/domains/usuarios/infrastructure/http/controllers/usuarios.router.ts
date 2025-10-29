@@ -40,7 +40,10 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(DeleteUsuarioDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.delete
     );
@@ -49,7 +52,10 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(UpdateUsuarioDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.update
     );
