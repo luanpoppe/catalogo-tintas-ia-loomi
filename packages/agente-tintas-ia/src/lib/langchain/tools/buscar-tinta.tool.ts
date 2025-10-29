@@ -1,12 +1,17 @@
 import prisma from "@catalogo-tintas/database";
-import { Tool } from "@langchain/core/tools";
+import { tool } from "@langchain/core/tools";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { env } from "../../../env";
+import z from "zod";
 
 const embeddings = new OpenAIEmbeddings({
   modelName: "text-embedding-3-small",
   openAIApiKey: env.OPENAI_API_KEY,
 });
+
+interface ToolProps {
+  input: string;
+}
 
 type TintaResult = {
   nome: string;
@@ -15,13 +20,28 @@ type TintaResult = {
   ambiente: string;
 };
 
-export class BuscarTintaTool extends Tool {
-  name = "buscar_tintas_suvinil";
-  description =
+export class BuscarTintaTool {
+  static name = "buscar_tintas_suvinil";
+  static description =
     'Use esta ferramenta para encontrar tintas Suvinil com base nas necessidades, contexto ou preferências do usuário. A entrada deve ser uma descrição do que o usuário procura (ex: "tinta para quarto sem cheiro", "tinta para muro externo que pega chuva").';
 
-  protected async _call(input: string): Promise<string> {
+  static tool() {
+    return tool(
+      async ({ input }: ToolProps) => await BuscarTintaTool.call(input),
+      {
+        name: BuscarTintaTool.name,
+        description: BuscarTintaTool.description,
+        schema: z.object({
+          input: z.string().nonempty(),
+        }),
+      }
+    );
+  }
+
+  static async call(input: string): Promise<string> {
     try {
+      console.log("COMEÇOU A CHAMAR A TOOL");
+
       const queryVetor = await embeddings.embedQuery(input);
 
       const tintas = await this.buscarTintasRelevantes(queryVetor);
@@ -39,7 +59,7 @@ export class BuscarTintaTool extends Tool {
     }
   }
 
-  private formatarResultado(tintas: TintaResult[]) {
+  private static formatarResultado(tintas: TintaResult[]) {
     return tintas
       .map(
         (t: TintaResult) =>
@@ -50,11 +70,16 @@ export class BuscarTintaTool extends Tool {
       .join("\n");
   }
 
-  private async buscarTintasRelevantes(
+  private static async buscarTintasRelevantes(
     queryEmbedding: number[],
     qtdResultados = 3
   ) {
     const embeddingString = `[${queryEmbedding.join(",")}]`;
+
+    // Garantir que o search_path inclua o schema público onde a extensão pgvector
+    // normalmente é instalada durante as migrations do ambiente de teste.
+    // Isso ajuda o Postgres a resolver corretamente o tipo `vector` e seus operadores.
+    await prisma.$executeRawUnsafe("SET search_path = public");
 
     const resultados = await prisma.$queryRaw<TintaResult[]>`
     SELECT 
@@ -64,7 +89,7 @@ export class BuscarTintaTool extends Tool {
       ambiente
     FROM "tintas"
     ORDER BY 
-      embedding <=> ${embeddingString}::vector
+      embedding <-> ${embeddingString}::vector
     LIMIT ${qtdResultados}
   `;
 

@@ -15,7 +15,7 @@ export class TintaRepository implements ITintaRepository {
   }
 
   async findById(id: number): Promise<TintaEntity | null> {
-    const tinta = await prisma.tintas.findUniqueOrThrow({
+    const tinta = await prisma.tintas.findUnique({
       where: { id },
     });
     return tinta;
@@ -33,13 +33,11 @@ export class TintaRepository implements ITintaRepository {
   async getByQuery(query: TintaQuery): Promise<TintaEntity[]> {
     const where: TintasWhereInput = TintaQueryMapper.gerarWhereDaQuery(query);
 
-    if (!query.features) query.features = [];
-
     const tintas = await prisma.tintas.findMany({
       where,
     });
 
-    return TintaQueryMapper.filtraTintasPorFeatures(tintas, query.features);
+    return tintas;
   }
 
   async create(tinta: RequestTintaDTO): Promise<TintaEntity> {

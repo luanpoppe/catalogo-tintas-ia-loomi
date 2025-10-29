@@ -1,3 +1,4 @@
+import { TintaQueryMapper } from "../../infrastructure/mappers/tinta-query.mapper";
 import {
   ITintaRepository,
   TintaQuery,
@@ -9,6 +10,17 @@ export class GetTintasByQueryUseCase {
   async execute(query: TintaQuery) {
     const tintas = await this.tintaRepository.getByQuery(query);
 
-    return { tintas };
+    const featuresToFilter = Array.isArray(query.features)
+      ? query.features
+      : query.features
+      ? [query.features]
+      : [];
+
+    return {
+      tintas: TintaQueryMapper.filtraTintasPorFeatures(
+        tintas,
+        featuresToFilter
+      ),
+    };
   }
 }

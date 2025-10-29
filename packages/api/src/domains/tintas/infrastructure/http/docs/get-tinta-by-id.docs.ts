@@ -8,7 +8,7 @@ export const GetTintaByIdDocs: RouteShorthandOptions = {
     tags: ["tintas"],
     description: "Obter uma tinta pelo ID.",
     params: z.object({
-      id: z.number().int().positive().describe("ID da tinta"),
+      id: z.coerce.number().int().positive().describe("ID da tinta"),
     }),
     response: {
       200: ResponseTintaDTOSchema.describe("Success"),

@@ -17,17 +17,30 @@ export class TintasRouter {
 
     app.get(
       "/search",
-      GetTintasByQueryDocs as any,
+      {
+        ...(GetTintasByQueryDocs as any),
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+      },
       TintasController.getByQuery
     );
 
-    app.get("/:id", GetTintaByIdDocs as any, TintasController.getById);
+    app.get(
+      "/:id",
+      {
+        ...(GetTintaByIdDocs as any),
+        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+      },
+      TintasController.getById
+    );
 
     app.post(
       "/",
       {
         ...(CreateTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.create
     );
@@ -36,7 +49,10 @@ export class TintasRouter {
       "/:id",
       {
         ...(UpdateTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.update
     );
@@ -45,7 +61,10 @@ export class TintasRouter {
       "/:id",
       {
         ...(DeleteTintaDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       TintasController.delete
     );

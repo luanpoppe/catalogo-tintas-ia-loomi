@@ -6,7 +6,11 @@ import { UpdateUsuarioUseCase } from "@/domains/usuarios/application/use-cases/u
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UsuarioRepository } from "../../repositories/usuario.repository";
 import { BCryptJS } from "@/lib/encrypt/bcryptjs";
-import { RequestUsuarioDTO, ResponseUsuarioDTO } from "../dto/usuario.dto";
+import {
+  RequestUsuarioDTO,
+  ResponseUsuarioDTO,
+  RequestUpdateUsuarioDTO,
+} from "../dto/usuario.dto";
 
 export class UsuariosController {
   static async create(
@@ -80,7 +84,7 @@ export class UsuariosController {
   static async update(
     req: FastifyRequest<{
       Params: { id: number };
-      Body: RequestUsuarioDTO;
+      Body: RequestUpdateUsuarioDTO;
     }>,
     reply: FastifyReply<{
       Body: ResponseUsuarioDTO;

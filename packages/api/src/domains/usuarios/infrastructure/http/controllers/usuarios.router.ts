@@ -14,7 +14,10 @@ export class UsuariosRouter {
       "/:id",
       {
         ...GetUsuarioByIdDocs,
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.getById as any
     );
@@ -23,7 +26,10 @@ export class UsuariosRouter {
       "/email/:email",
       {
         ...(GetUsuarioByEmailDocs as any),
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.getByEmail as any
     );
@@ -40,7 +46,10 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(DeleteUsuarioDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.delete
     );
@@ -49,7 +58,10 @@ export class UsuariosRouter {
       "/:id",
       {
         ...(UpdateUsuarioDocs as any),
-        preHandler: VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        preHandler: [
+          VerificarUsuarioLogadoMiddleware.middleware,
+          VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
+        ],
       },
       UsuariosController.update
     );

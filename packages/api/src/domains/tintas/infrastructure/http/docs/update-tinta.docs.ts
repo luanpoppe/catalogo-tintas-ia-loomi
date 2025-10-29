@@ -12,7 +12,7 @@ export const UpdateTintaDocs: RouteShorthandOptions = {
     tags: ["tintas"],
     description: "Atualizar uma tinta existente.",
     params: z.object({
-      id: z.number().int().positive().describe("ID da tinta"),
+      id: z.coerce.number().int().positive().describe("ID da tinta"),
     }),
     body: RequestTintaDTOSchema.partial(),
     response: {

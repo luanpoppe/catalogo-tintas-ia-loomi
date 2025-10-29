@@ -73,10 +73,10 @@ describe("GetTintasByQueryUseCase", () => {
     expect(result).toEqual({ tintas: expectedTintas });
   });
 
-  it("deve retornar tintas por query de tiposDeSuperfeicie", async () => {
+  it("deve retornar tintas por query de features (string)", async () => {
     const mockTintaRepository = MockTintaBuilder.buildMockRepository();
     const expectedTintas = allMockTintas.filter((t) =>
-      t.tiposDeSuperfeicie.includes("MADEIRA")
+      t.features.some((f) => f.includes("brilho"))
     );
     mockTintaRepository.getByQuery.mockResolvedValue(expectedTintas);
 
@@ -84,7 +84,7 @@ describe("GetTintasByQueryUseCase", () => {
       mockTintaRepository
     );
 
-    const query: TintaQuery = { tiposDeSuperfeicie: ["MADEIRA"] };
+    const query: TintaQuery = { features: "brilho" };
     const result = await getTintasByQueryUseCase.execute(query);
 
     expect(mockTintaRepository.getByQuery).toHaveBeenCalledWith(query);
@@ -102,7 +102,10 @@ describe("GetTintasByQueryUseCase", () => {
       mockTintaRepository
     );
 
-    const query: TintaQuery = { cor: "Vermelho", ambiente: "INTERNO" };
+    const query: TintaQuery = {
+      cor: "Vermelho",
+      ambiente: "INTERNO",
+    };
     const result = await getTintasByQueryUseCase.execute(query);
 
     expect(mockTintaRepository.getByQuery).toHaveBeenCalledWith(query);
