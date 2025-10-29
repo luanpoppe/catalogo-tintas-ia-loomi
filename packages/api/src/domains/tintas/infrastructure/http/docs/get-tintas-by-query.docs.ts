@@ -16,10 +16,7 @@ export const GetTintasByQueryDocs: RouteShorthandOptions = {
       cor: z.string().optional().describe("Cor da tinta"),
       ambiente: AMBIENTES_SCHEMA.optional().describe("Ambiente da tinta"),
       acabamento: ACABAMENTOS_SCHEMA.optional().describe("Acabamento da tinta"),
-      features: z
-        .array(z.string())
-        .optional()
-        .describe("Características da tinta"),
+      features: z.string().optional().describe("Características da tinta"),
       linhas: LINHAS_SCHEMA.optional().describe("Linha da tinta"),
       tiposDeSuperfeicie: z
         .array(TIPOS_DE_SUPERFICIE_SCHEMA)

@@ -33,13 +33,11 @@ export class TintaRepository implements ITintaRepository {
   async getByQuery(query: TintaQuery): Promise<TintaEntity[]> {
     const where: TintasWhereInput = TintaQueryMapper.gerarWhereDaQuery(query);
 
-    if (!query.features) query.features = [];
-
     const tintas = await prisma.tintas.findMany({
       where,
     });
 
-    return TintaQueryMapper.filtraTintasPorFeatures(tintas, query.features);
+    return tintas;
   }
 
   async create(tinta: RequestTintaDTO): Promise<TintaEntity> {
