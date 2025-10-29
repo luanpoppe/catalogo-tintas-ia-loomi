@@ -63,7 +63,7 @@ export class UsuariosRouter {
           VerificarPermissaoDoUsuarioMiddleware.middleware("ADMIN"),
         ],
       },
-      UsuariosController.update
+      UsuariosController.update as any
     );
   }
 }

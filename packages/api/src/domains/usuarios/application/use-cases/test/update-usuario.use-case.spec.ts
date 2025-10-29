@@ -27,7 +27,9 @@ describe("UpdateUsuarioUseCase", () => {
 
     const updatedUsuario: UsuarioEntity = {
       id: usuarioId,
-      ...updateBody,
+      nome: updateBody.nome ?? usuarioEntity.nome,
+      email: updateBody.email ?? usuarioEntity.email,
+      tipoUsuario: updateBody.tipoUsuario ?? usuarioEntity.tipoUsuario,
     };
 
     mockUsuarioRepository.update.mockResolvedValue(updatedUsuario);
@@ -52,7 +54,9 @@ describe("UpdateUsuarioUseCase", () => {
     const usuarioId = 999;
     const updatedUsuario: UsuarioEntity = {
       id: usuarioId,
-      ...updateBody,
+      nome: updateBody.nome ?? "Default Name", // Ou um valor padrão adequado para o teste
+      email: updateBody.email ?? "default@example.com",
+      tipoUsuario: updateBody.tipoUsuario ?? "COMUM",
     };
 
     mockUsuarioRepository.doesIdExist.mockResolvedValue(false);

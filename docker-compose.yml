@@ -12,3 +12,30 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    env_file:
+      - packages/api/.env
+    environment:
+      - DATABASE_URL=postgresql://docker:docker@catalogo-tintas-pg:5432/catalogo_tintas?schema=public
+    depends_on:
+      catalogo-tintas-pg:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    # --- CORREÇÃO ADICIONADA AQUI ---
+    # Adicionamos 'npx prisma generate...' ao início do comando.
+    # Isso garante que os binários corretos do Prisma (para Linux)
+    # sejam gerados dentro do contêiner antes da aplicação iniciar.
+    command: sh -c "npx prisma generate --schema=packages/database/prisma/schema.prisma && npm run build --workspace=packages/agente-tintas-ia && npm run build --workspace=packages/database && npm run start --workspace=packages/api"
+
+volumes:
+  pgdata:
