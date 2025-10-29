@@ -10,7 +10,9 @@ import {
   RequestUsuarioDTO,
   ResponseUsuarioDTO,
   RequestUpdateUsuarioDTO,
+  ResponseCreateUsuarioDTO,
 } from "../dto/usuario.dto";
+import { env } from "@/env";
 
 export class UsuariosController {
   static async create(
@@ -18,7 +20,7 @@ export class UsuariosController {
       Body: RequestUsuarioDTO;
     }>,
     reply: FastifyReply<{
-      Body: ResponseUsuarioDTO;
+      Body: ResponseCreateUsuarioDTO;
     }>
   ) {
     const usuarioRepository = new UsuarioRepository();
@@ -28,9 +30,23 @@ export class UsuariosController {
 
     const tipoUsuario = req?.user?.tipoDeUsuario;
 
-    const { usuario } = await useCase.execute(req.body, tipoUsuario);
+    const { usuario, accessToken, refreshToken } = await useCase.execute(
+      req.body,
+      reply,
+      tipoUsuario
+    );
 
-    return reply.status(201).send(usuario);
+    console.log({ usuario, accessToken });
+
+    return reply
+      .setCookie("refreshToken", refreshToken, {
+        path: "/",
+        secure: env.NODE_ENV === "prod",
+        sameSite: true,
+        httpOnly: true,
+      })
+      .status(201)
+      .send({ usuario, accessToken });
   }
 
   static async delete(

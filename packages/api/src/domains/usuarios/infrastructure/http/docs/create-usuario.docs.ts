@@ -2,7 +2,7 @@ import z from "zod";
 import { RouteShorthandOptions } from "fastify";
 import {
   RequestUsuarioDTOSchema,
-  ResponseUsuarioDTOSchema,
+  ResponseCreateUsuarioDTOSchema,
 } from "../dto/usuario.dto";
 import { ErroDeValidacaoDocs } from "@/core/infrastructure/http/docs/erro-de-validacao.docs";
 import { UsuarioSemPermissaoDocs } from "@/core/infrastructure/http/docs/usuario-sem-premissao.docs";
@@ -13,7 +13,7 @@ export const CreateUsuarioDocs: RouteShorthandOptions = {
     description: "Criar um usuário.",
     body: RequestUsuarioDTOSchema,
     response: {
-      200: ResponseUsuarioDTOSchema.describe("Successo"),
+      201: ResponseCreateUsuarioDTOSchema.describe("Successo"),
       400: ErroDeValidacaoDocs,
       403: UsuarioSemPermissaoDocs,
       500: z
