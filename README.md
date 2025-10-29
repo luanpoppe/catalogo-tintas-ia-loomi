@@ -1,8 +1,8 @@
-# Catálogo Inteligente de Tintas IA - Desafio Loomi
+# 🎨 Catálogo Inteligente de Tintas IA - Desafio Loomi
 
-Este projeto implementa um assistente de IA especialista em tintas Suvinil, desenvolvido como solução para o [Desafio Back IA da Loomi](Desafio%20Back%20IA%20-%20Loomi.pdf). O assistente ajuda usuários a escolherem produtos ideais, interpretando suas necessidades, buscando informações em uma base de dados vetorizada e, opcionalmente, gerando simulações visuais.
+Este projeto implementa um assistente de IA especialista em tintas Suvinil, desenvolvido como solução para o Desafio Back IA da Loomi. O assistente ajuda usuários a escolherem produtos ideais, interpretando suas necessidades, buscando informações em uma base de dados vetorizada e, opcionalmente, gerando simulações visuais.
 
-## 1. Visão Geral
+## 🌟 1. Visão Geral
 
 A solução é um monorepo gerenciado com NPM Workspaces, contendo os seguintes pacotes principais:
 
@@ -11,7 +11,7 @@ A solução é um monorepo gerenciado com NPM Workspaces, contendo os seguintes 
 3.  **`packages/database`**: Gerencia o schema do banco de dados (Prisma), migrações, seeding (incluindo geração de embeddings) e o cliente Prisma.
 4.  **`packages/frontend`**: (Bônus) Aplicação frontend (Next.js + React + TypeScript) com interface de chat para interagir com o assistente.
 
-## 2. Funcionalidades Implementadas
+## ✨ 2. Funcionalidades Implementadas
 
 ### API (`packages/api`)
 
@@ -53,7 +53,7 @@ A solução é um monorepo gerenciado com NPM Workspaces, contendo os seguintes 
 - **Gerenciamento de Token:** Cliente API (`lib/api.ts`) com lógica para refresh automático de token JWT.
 - \*\*Modo Dev
 
-## 3. Arquitetura da Solução
+## 🏗️ 3. Arquitetura da Solução
 
 O projeto adota uma arquitetura de monorepo com pacotes independentes, utilizando Docker Compose para orquestração.
 
@@ -94,7 +94,7 @@ A estrutura do projeto no monorepo é organizada da seguinte forma:
   - `tsconfig.json`: Configuração TypeScript base para o monorepo, referenciando os pacotes.
   - `README.md`: O arquivo principal de documentação do projeto.
 
-## 4. Stack Tecnológica
+## 💻 4. Stack Tecnológica
 
 | Categoria            | Tecnologia                 | Justificativa (Baseado no Desafio)                               |
 | :------------------- | :------------------------- | :--------------------------------------------------------------- |
@@ -113,7 +113,7 @@ A estrutura do projeto no monorepo é organizada da seguinte forma:
 | **Frontend**         | Next.js + React + TS       | (Bônus) Framework moderno para UI                                |
 |                      | Tailwind CSS + shadcn/ui   | (Bônus) Estilização e componentes de UI                          |
 
-## 5. Como Executar (Getting Started)
+## 🚀 5. Como Executar (Getting Started)
 
 ### Pré-requisitos
 
@@ -143,7 +143,7 @@ Este método sobe a API, o Frontend e o Banco de Dados PostgreSQL com a extensã
 
 1.  Clone o repositório:
     ```bash
-    git clone [https://github.com/luanpoppe/catalogo-tintas-ia-loomi.git](https://github.com/luanpoppe/catalogo-tintas-ia-loomi.git)
+    git clone https://github.com/luanpoppe/catalogo-tintas-ia-loomi.git .
     cd catalogo-tintas-ia-loomi
     ```
 2.  Configure os arquivos `.env` conforme a seção anterior.
@@ -184,7 +184,7 @@ Requer instalação manual das dependências e gerenciamento do banco de dados.
     ```
     O Frontend estará disponível em `http://localhost:3000`.
 
-## 6. Testando
+## 🧪 6. Testando
 
 ### API (Swagger)
 
@@ -217,7 +217,7 @@ curl -X POST http://localhost:3333/chat \
 }
 ```
 
-## 7. Testes Automatizados
+## ✅ 7. Testes Automatizados
 
 O projeto inclui testes **unitários** e **end-to-end** para a API:
 
@@ -247,11 +247,13 @@ O projeto inclui testes **unitários** e **end-to-end** para a API:
   npm run test:e2e:coverage -w api
   ```
 
-## 8. Uso de Ferramentas de IA no Desenvolvimento
+## 🤖 8. Uso de Ferramentas de IA no Desenvolvimento
 
 Conforme solicitado no desafio, foram utilizadas ferramentas de **IA** para auxiliar no desenvolvimento:
 
-### 🧠 ChatGPT (OpenAI)
+### 💡 Extensão Cline do VS Code (Ferramenta open source que simula Cursor/Copilot):
+
+### 🔍 Gemini (Google)
 
 - **Brainstorming:** geração de ideias para estrutura de projeto e nomes de ferramentas LangChain.
 - **Geração de Código:** criação de boilerplate para controllers Fastify, use cases e testes unitários iniciais (com posterior refatoração).
@@ -262,17 +264,17 @@ Conforme solicitado no desafio, foram utilizadas ferramentas de **IA** para auxi
   > “Revise este código TypeScript para o script de seed do Prisma e sugira melhorias de performance e tratamento de erros ao gerar embeddings com a API da OpenAI.”
 - **Debugging:** identificação de erros em configurações de Docker, Prisma e LangChain.
 - **Documentação:** auxílio na escrita inicial de seções do README e comentários de código.
-
-### 💡 Extensão Cline do VS Code (Ferramenta open source que simula Cursor/Copilot):
+- **Pesquisa Conceitual:** exploração de conceitos como RAG, arquitetura de agentes e pgvector.
+- **Comparação de Abordagens:** auxílio na decisão entre diferentes formas de implementar a memória do agente ou a busca vetorial.
 
 - **Geração Contextual:** gerar funções ou classes com base no contexto do arquivo atual.
   > Exemplo: Selecionar a interface `ITintaRepository` e pedir para gerar uma implementação inicial da classe `TintaRepository`.
 - **Explicação de Código:** compreensão de trechos complexos de bibliotecas (ex: funcionamento interno de `createAgent` do LangChain).
 
-### 🔍 Gemini (Google)
+### 🎨 v0.dev (Vercel)
 
-- **Pesquisa Conceitual:** exploração de conceitos como RAG, arquitetura de agentes e pgvector.
-- **Comparação de Abordagens:** auxílio na decisão entre diferentes formas de implementar a memória do agente ou a busca vetorial.
+- **Prototipação de UI:** Utilizado para a criação e iteração rápida dos componentes visuais e da estrutura inicial da interface do frontend.
+  > Exemplo: Gerar o layout inicial da página de chat e dos formulários de autenticação com base em descrições textuais.
 
 ### 🧭 Tomada de Decisão
 
@@ -280,7 +282,7 @@ As sugestões das IAs foram usadas como ponto de partida ou auxílio.
 Todo o código gerado foi **revisado, adaptado e testado** para garantir qualidade, boas práticas e integração com o restante do projeto.  
 A decisão final sobre arquitetura, escolha de ferramentas e implementação foi **autoral**, com as IAs atuando como ferramentas de **produtividade e consulta**.
 
-## 9. Fluxo de Git
+## 🌳 9. Fluxo de Git
 
 O desenvolvimento seguiu as diretrizes do desafio:
 
@@ -294,7 +296,8 @@ O desenvolvimento seguiu as diretrizes do desafio:
 
 - **Pull Requests:** ao concluir uma feature, foi aberto um PR para `develop` para revisão (simulada neste contexto) antes do merge.
 
-## 9. Próximos Passos:
+## ➡️ 9. Próximos Passos:
+
 - **Enums Dinâmicos:** Transformar os enums relacionados às características das tintas (Ambiente, Acabamento, Linhas, Tipos de Superfície) em tabelas no banco de dados. Isso permitiria que um administrador pudesse adicionar ou editar essas opções sem necessidade de alterar o código e redployar a aplicação.
 - **Contexto do Usuário para IA:** Passar informações do usuário logado (como o nome) para o prompt do agente de IA, permitindo uma interação mais personalizada.
 - **Memória de Longo Prazo:** Além da memória de curto prazo por sessão, implementar um mecanismo para salvar resumos ou contextos importantes de conversas anteriores do usuário, permitindo que o agente recupere informações relevantes em novas sessões.
