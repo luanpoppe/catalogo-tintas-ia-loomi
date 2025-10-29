@@ -44,8 +44,7 @@ describe("Buscar usuário por ID", () => {
   });
 
   it.only("usuário comum não deve poder buscar um usuário por ID", async () => {
-    const { accessToken, cookies } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+    const { accessToken, cookies } = await UsuariosBuilder.criarUsuarioComum();
 
     const { usuario: usuarioCriado, senha } =
       await UsuariosBuilder.criarUsuarioComum();

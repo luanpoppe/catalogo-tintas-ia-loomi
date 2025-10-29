@@ -28,14 +28,15 @@ describe("Criar usuário", () => {
     const resposta = await request(app.server).post("/usuario").send(body);
 
     expect(resposta.statusCode).toEqual(201);
-    expect(resposta.body).toEqual(
-      expect.objectContaining({
+    expect(resposta.body).toEqual({
+      usuario: expect.objectContaining({
         id: expect.any(Number),
         email,
         nome,
         tipoUsuario,
-      })
-    );
+      }),
+      accessToken: expect.any(String),
+    });
 
     expect(resposta.body.passwordHash).toBeUndefined();
     expect(resposta.body.senha).toBeUndefined();

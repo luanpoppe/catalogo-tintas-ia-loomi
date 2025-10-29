@@ -65,7 +65,7 @@ describe("Atualizar tinta", () => {
     const tintaIdParaAtualizar = novaTinta.id;
 
     const { accessToken: accessTokenComum, cookies: cookiesComum } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+      await UsuariosBuilder.criarUsuarioComum();
 
     const { tintaRequestBody: updatedTintaRequestBody } =
       TintasBuilder.gerarTintaRequestBody();

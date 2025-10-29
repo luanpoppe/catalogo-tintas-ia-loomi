@@ -28,8 +28,6 @@ describe("Deletar tinta", () => {
     const novaTinta = await TintasBuilder.criarTinta({ accessToken, cookies });
     const tintaId = novaTinta.id;
 
-    console.log({ accessToken, cookies });
-
     const deletarResposta = await request(app.server)
       .delete(`/tinta/${tintaId}`)
       .set("Cookie", cookies)
@@ -46,7 +44,7 @@ describe("Deletar tinta", () => {
     const tintaId = novaTinta.id;
 
     const { accessToken: accessTokenComum, cookies: cookiesComum } =
-      await UsuariosBuilder.criarELogarUsuarioComum();
+      await UsuariosBuilder.criarUsuarioComum();
 
     const deletarResposta = await request(app.server)
       .delete(`/tinta/${tintaId}`)

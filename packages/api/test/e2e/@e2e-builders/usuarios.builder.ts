@@ -5,11 +5,11 @@ import {
 } from "@/domains/auth/infrastructure/http/dto/login.dto";
 import {
   RequestUsuarioDTO,
+  ResponseCreateUsuarioDTO,
   ResponseUsuarioDTO,
 } from "@/domains/usuarios/infrastructure/http/dto/usuario.dto";
 import { BCryptJS } from "@/lib/encrypt/bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { hash } from "bcryptjs";
 import request from "supertest";
 import { faker } from "@faker-js/faker";
 
@@ -25,13 +25,19 @@ export class UsuariosBuilder {
       tipoUsuario: "COMUM",
     };
 
-    const { body } = await request(app.server)
+    const resposta = await request(app.server)
       .post("/usuario")
       .send(requestBody);
 
+    const cookies = resposta.get("Set-Cookie") ?? [];
+
+    const { usuario, accessToken } = resposta.body as ResponseCreateUsuarioDTO;
+
     return {
-      usuario: body as ResponseUsuarioDTO,
+      usuario,
+      accessToken,
       senha,
+      cookies,
     };
   }
 
@@ -50,29 +56,6 @@ export class UsuariosBuilder {
     });
 
     return { admin, senha };
-  }
-
-  static async criarELogarUsuarioComum() {
-    const usuarioCriado = await this.criarUsuarioComum();
-
-    const requestBody: RequestLoginDTO = {
-      email: usuarioCriado.usuario.email,
-      senha: usuarioCriado.senha,
-    };
-
-    const resposta = await request(app.server)
-      .post("/auth/login")
-      .send(requestBody);
-
-    const cookies = resposta.get("Set-Cookie") ?? [];
-
-    const { accessToken }: ResponseLoginDTO = resposta.body;
-
-    return {
-      ...usuarioCriado,
-      accessToken,
-      cookies,
-    };
   }
 
   static async criarELogarUsuarioAdmin() {
