@@ -6,6 +6,7 @@ import { ErroDeValidacaoDocs } from "@/core/infrastructure/http/docs/erro-de-val
 const schema: FastifySchema = {
   tags: ["chat"],
   description: "Realizar o login",
+  security: [{ bearerAuth: [] }],
   body: RequestChatDTOSchema,
   response: {
     200: ResponseChatDTOSchema.describe("Successo"),

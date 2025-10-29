@@ -6,6 +6,7 @@ export const DeleteUsuarioDocs: RouteShorthandOptions = {
   schema: {
     tags: ["usuarios"],
     description: "Deletar um usuário pelo ID.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       id: z.coerce.number().describe("ID do usuário"),
     }),

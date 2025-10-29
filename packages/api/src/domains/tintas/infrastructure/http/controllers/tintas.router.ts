@@ -19,7 +19,6 @@ export class TintasRouter {
       "/search",
       {
         ...(GetTintasByQueryDocs as any),
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       TintasController.getByQuery
     );
@@ -28,7 +27,6 @@ export class TintasRouter {
       "/:id",
       {
         ...(GetTintaByIdDocs as any),
-        preHandler: VerificarUsuarioLogadoMiddleware.middleware,
       },
       TintasController.getById
     );

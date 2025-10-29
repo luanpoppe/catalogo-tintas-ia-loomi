@@ -6,6 +6,7 @@ export const DeleteTintaDocs: RouteShorthandOptions = {
   schema: {
     tags: ["tintas"],
     description: "Deletar uma tinta pelo ID.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       id: z.coerce.number().int().positive().describe("ID da tinta"),
     }),

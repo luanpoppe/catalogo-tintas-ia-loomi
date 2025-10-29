@@ -7,6 +7,7 @@ export const GetUsuarioByIdDocs: RouteShorthandOptions = {
   schema: {
     tags: ["usuarios"],
     description: "Buscar um usuário pelo ID.",
+    security: [{ bearerAuth: [] }],
     params: z.object({
       id: z.coerce.number().describe("ID do usuário"),
     }),
