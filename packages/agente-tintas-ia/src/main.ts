@@ -26,8 +26,7 @@ export class AgenteTintaIA {
         checkpointer,
       });
 
-      // if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
-      await checkpointer.deleteThread(threadId);
+      if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
 
       const fullResponse = await agent.invoke(
         {
