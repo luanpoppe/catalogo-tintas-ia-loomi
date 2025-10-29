@@ -6,7 +6,8 @@ import { ListarTodasTintasTool } from "./lib/langchain/tools/listar-todas-tintas
 import { BuscarTintasPorQueryTool } from "./lib/langchain/tools/buscar-tintas-por-query.tool";
 import { BuscarInternetTool } from "./lib/langchain/tools/buscar-internet.tool";
 import { GerarImagemTintaTool } from "./lib/langchain/tools/gerar-imagem-tinta.tool";
-import z from "zod";
+import { AgenteTintaPrompt } from "./core/prompts/agente-tinta-prompt";
+import { AgenteTintaResponseDTOSchema } from "./core/infrastructure/dto/agente-tinta.dto";
 
 export class AgenteTintaIA {
   async handle(
@@ -24,24 +25,13 @@ export class AgenteTintaIA {
     ];
     const checkpointer = await ShortTermMemory.checkpointer();
 
-    const responseFormat = z.object({
-      texto: z
-        .string()
-        .nonempty()
-        .describe("Texto a ser enviado ao usuário final."),
-      urlImagem: z
-        .optional(z.string())
-        .describe(
-          "Em caso de uso da tool de geração de imagem, passe a url da imagem gerada aqui. Se esta tool não for utilizada, você nãodeve passar nenhumvalor aqui."
-        ),
-    });
-
     try {
       const agent = createAgent({
         model,
         tools,
         checkpointer,
-        responseFormat,
+        responseFormat: AgenteTintaResponseDTOSchema,
+        systemPrompt: AgenteTintaPrompt,
       });
 
       if (shouldEraseMemory) await checkpointer.deleteThread(threadId);
