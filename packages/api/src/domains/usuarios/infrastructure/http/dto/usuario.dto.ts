@@ -17,7 +17,9 @@ export const RequestUsuarioDTOSchema = UsuarioSchema.extend({
 
 export type RequestUsuarioDTO = z.infer<typeof RequestUsuarioDTOSchema>;
 
-export const RequestUpdateUsuarioDTOSchema = UsuarioSchema.omit({ id: true });
+export const RequestUpdateUsuarioDTOSchema = UsuarioSchema.omit({
+  id: true,
+}).partial();
 
 export type RequestUpdateUsuarioDTO = z.infer<
   typeof RequestUpdateUsuarioDTOSchema
