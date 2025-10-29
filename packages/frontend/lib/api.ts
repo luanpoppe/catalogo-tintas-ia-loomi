@@ -132,11 +132,16 @@ async function performRequest<T = any>(config: AxiosRequestConfig): Promise<T> {
   return response.data;
 }
 
+interface ChatResponse {
+  aiMessage: string;
+  urlImagem?: string;
+}
+
 export async function sendChatMessage(
   userMessage: string,
   shouldEraseMemory: boolean = false
-): Promise<any> {
-  return apiRequest("/chat", {
+): Promise<ChatResponse> {
+  return apiRequest<ChatResponse>("/chat", {
     method: "POST",
     data: { userMessage, shouldEraseMemory },
   });
