@@ -186,6 +186,15 @@ Requer instalação manual das dependências e gerenciamento do banco de dados.
 
 ## 🧪 6. Testando
 
+### Acesso de Administrador
+
+Para facilitar os testes das funcionalidades administrativas (como gerenciamento de tintas e usuários), o script de `seed` do banco de dados cria um usuário administrador padrão com as seguintes credenciais:
+
+- **E-mail:** `admin@admin.com`
+- **Senha:** `Senha123`
+
+Com este usuário, você pode fazer login e ter acesso total aos endpoints protegidos da API, permitindo a criação de outros administradores e a gestão completa de tintas e usuários.
+
 ### API (Swagger)
 
 Acesse `http://localhost:3333/swagger` para interagir com os endpoints da API (CRUD Tintas, CRUD Usuários, Auth). Use o botão "Authorize" para testar endpoints protegidos após obter um token JWT via login[cite: 107].
@@ -296,7 +305,7 @@ O desenvolvimento seguiu as diretrizes do desafio:
 
 - **Pull Requests:** ao concluir uma feature, foi aberto um PR para `develop` para revisão (simulada neste contexto) antes do merge.
 
-## ➡️ 9. Próximos Passos:
+## ➡️ 10. Próximos Passos:
 
 - **Enums Dinâmicos:** Transformar os enums relacionados às características das tintas (Ambiente, Acabamento, Linhas, Tipos de Superfície) em tabelas no banco de dados. Isso permitiria que um administrador pudesse adicionar ou editar essas opções sem necessidade de alterar o código e redployar a aplicação.
 - **Contexto do Usuário para IA:** Passar informações do usuário logado (como o nome) para o prompt do agente de IA, permitindo uma interação mais personalizada.
